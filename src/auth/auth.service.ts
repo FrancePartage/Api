@@ -1,9 +1,9 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { AuthDto } from './dto';
 import * as argon2 from 'argon2';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
+import { SignInDto, SignUpDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +13,7 @@ export class AuthService {
 		private jwtService: JwtService
 	) {}
 
-	async signupLocal(dto: AuthDto): Promise<Tokens> {
+	async signupLocal(dto: SignUpDto): Promise<Tokens> {
 		const hash = await this.hashData(dto.password);
 
 		const user = await this.prisma.user.findUnique({
@@ -32,11 +32,10 @@ export class AuthService {
 		});
 
 		const tokens = await this.getTokens(newUser.id, newUser.email);
-		await this.updateRtHash(newUser.id, tokens.refreshToken);
 		return tokens;
 	}
 
-	async signinLocal(dto: AuthDto): Promise<Tokens> {
+	async signinLocal(dto: SignInDto): Promise<Tokens> {
 		const user = await this.prisma.user.findUnique({
 			where: {
 				email: dto.email
@@ -49,7 +48,6 @@ export class AuthService {
 		if (!passwordMatches) throw new ForbiddenException("Accès refusé");
 		
 		const tokens = await this.getTokens(user.id, user.email);
-		await this.updateRtHash(user.id, tokens.refreshToken);
 		return tokens;
 	}
 
@@ -67,7 +65,7 @@ export class AuthService {
 		});
 	}
 
-	async refreshTokens(userId: number, rt: string) {
+	async refreshTokens(userId: number, rt: string): Promise<Tokens> {
 		const user = await this.prisma.user.findUnique({
 			where: {
 				id: userId
@@ -80,7 +78,6 @@ export class AuthService {
 		if (!rtMatches) throw new ForbiddenException("Accès refusé");
 
 		const tokens = await this.getTokens(user.id, user.email);
-		await this.updateRtHash(user.id, tokens.refreshToken);
 		return tokens;
 	}
 
@@ -124,6 +121,8 @@ export class AuthService {
 				}
 			)
 		]);
+
+		await this.updateRtHash(userId, rt);
 
 		return {
 			accessToken: at,

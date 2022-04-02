@@ -2,7 +2,7 @@ import { GetCurrentUser, GetCurrentUserId, Public } from '@/common/decorators';
 import { RtGuard } from '@/common/guards';
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthDto } from './dto';
+import { SignInDto, SignUpDto } from './dto';
 import { Tokens } from './types';
 
 @Controller('auth')
@@ -15,14 +15,14 @@ export class AuthController {
 	@Public()
 	@Post('local/signup')
 	@HttpCode(HttpStatus.CREATED)
-	signupLocal(@Body() dto: AuthDto): Promise<Tokens> {
+	signupLocal(@Body() dto: SignUpDto): Promise<Tokens> {
 		return this.authService.signupLocal(dto);
 	}
 
 	@Public()
 	@Post('local/signin')
 	@HttpCode(HttpStatus.OK)
-	signinLocal(@Body() dto: AuthDto): Promise<Tokens> {
+	signinLocal(@Body() dto: SignInDto): Promise<Tokens> {
 		return this.authService.signinLocal(dto);
 	}
 
@@ -39,7 +39,7 @@ export class AuthController {
 	refreshTokens(
 		@GetCurrentUserId() userId: number,
 		@GetCurrentUser('refreshToken') refreshToken: string
-	) {
+	): Promise<Tokens> {
 		return this.authService.refreshTokens(userId, refreshToken);
 	}
 
