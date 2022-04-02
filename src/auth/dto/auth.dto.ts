@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString, MinLength, Validate } from "class-validator";
+import { PasswordValidation } from "class-validator-password-check/lib";
 
 export class AuthDto {
 
@@ -8,6 +9,13 @@ export class AuthDto {
 
 	@IsNotEmpty()
 	@IsString()
+	@MinLength(6)
+	@Validate(PasswordValidation, [{
+		mustContainLowerLetter: true,
+		mustContainNumber: true,
+		mustContainSpecialCharacter: false,
+		mustContainUpperLetter: true
+	}])
 	password: string;
 
 }
