@@ -59,7 +59,22 @@ export class AuthService {
 		});
 	}
 
-	refreshTokens() {}
+	async refreshTokens(userId: number, rt: string) {
+		const user = await this.prisma.user.findUnique({
+			where: {
+				id: userId
+			}
+		});
+
+		if (!user || !user.hashedRt) throw new ForbiddenException("Accès refusé");
+
+		const rtMatches = bcrypt.compare(rt, user.hashedRt);
+		if (!rtMatches) throw new ForbiddenException("Accès refusé");
+
+		const tokens = await this.getTokens(user.id, user.email);
+		await this.updateRtHash(user.id, tokens.refreshToken);
+		return tokens;
+	}
 
 	async updateRtHash(userId: number, rt: string) {
 		const hash = await this.hashData(rt);
