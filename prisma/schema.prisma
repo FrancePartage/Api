@@ -19,5 +19,14 @@ model User {
 	hash 			String
 	hashedRt 	String?
 
+	role			Role			@default(CITIZEN)
+
 	@@map("users")
+}
+
+enum Role {
+	SUPER_ADMIN
+	ADMIN
+	MODERATOR
+	CITIZEN
 }
