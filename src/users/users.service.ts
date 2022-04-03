@@ -10,7 +10,7 @@ export class UsersService {
 		private prisma: PrismaService
 	) {}
 
-	async getById(userId: number): Promise<User> {
+	async findOne(userId: number): Promise<User> {
 		const user = await this.prisma.user.findUnique({
 			where: {
 				id: userId
@@ -19,9 +19,16 @@ export class UsersService {
 
 		if (!user) throw new Error("User not found");
 
+		let displayName = '';
+
+		if (!user['acceptRgpd'] || !user['firstname'] || !user['lastname']) {
+			displayName = user['username'];
+		} else {
+			displayName = `${user['firstname']} ${user['lastname']}`;
+		}
+
 		return {
-			firstName: '',
-			lastName: '',
+			displayName: displayName,
 			role: Role[user['role'] as keyof Role]
 		};
 	}

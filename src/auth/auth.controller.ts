@@ -28,7 +28,6 @@ export class AuthController {
 	}
 
 	@Post('logout')
-	@Roles(Role.SUPER_ADMIN)
 	@HttpCode(HttpStatus.OK)
 	logout(@GetCurrentUserId() userId: number) {
 		return this.authService.logout(userId);
