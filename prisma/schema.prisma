@@ -11,19 +11,22 @@ datasource db {
 }
 
 model User {
-	id 					Int				@id @default(autoincrement())
-	createdAt 	DateTime 	@default(now())
-	updatedAt 	DateTime 	@default(now())
+	id 									Int				@id @default(autoincrement())
+	createdAt 					DateTime 	@default(now())
+	updatedAt 					DateTime 	@default(now())
 
-	email 			String 		@unique
-	hash 				String
-	hashedRt 		String?
+	email 							String 		@unique
+	hash 								String
+	hashedRt 						String?
 
-	username 		String
-	firstname 	String?
-	lastname  	String?
-	role				Role			@default(CITIZEN)
-	acceptRgpd 	Boolean		@default(false)
+	username 						String
+	firstname 					String?
+	lastname  					String?
+	role								Role			@default(CITIZEN)
+	acceptRgpd 					Boolean		@default(false)
+
+	relations						Relation[] @relation(name: "relations")
+	relationRequests		Relation[] @relation(name: "requests")
 
 	@@map("users")
 }
@@ -33,4 +36,26 @@ enum Role {
 	ADMIN
 	MODERATOR
 	CITIZEN
+}
+
+model Relation {
+	id 						Int				@id @default(autoincrement())
+
+	participants	User[]		@relation(name: "relations")
+	requestToId 	Int
+	requestTo 		User 			@relation(name: "requests", fields: [requestToId], references: [id])
+
+	isAccepted		Boolean 	@default(false)
+
+	createdAt 		DateTime 	@default(now())
+	updatedAt 		DateTime 	@default(now())
+
+	@@map("relations")
+}
+
+enum RelationType {
+	FAMILY
+	FRIEND
+	WORKMATE
+	SPOUSE
 }
