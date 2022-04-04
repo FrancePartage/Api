@@ -1,7 +1,7 @@
 import { RelationType } from "@prisma/client";
 import { IsEnum, IsInt, IsNotEmpty } from "class-validator";
 
-export class RequestDto {
+export class MakeRequestDto {
 
 	@IsInt()
 	@IsNotEmpty()

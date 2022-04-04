@@ -1,6 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { RelationType } from '@prisma/client';
+import { Relation, RelationType } from '@prisma/client';
 
 @Injectable()
 export class RelationsService {
@@ -9,7 +9,16 @@ export class RelationsService {
 		private prisma: PrismaService,
 	) {}
 
-	async findOne(userId: number, recipientId: number) {
+	async findOne(id: number) {
+		const relation = await this.prisma.relation.findFirst({
+			where: {
+				id: id
+			}
+		});
+		return relation;
+	}
+
+	async findOneBetweenUsers(userId: number, recipientId: number) {
 		const relation = await this.prisma.relation.findFirst({
 			where: {
 				participants: {
@@ -26,7 +35,7 @@ export class RelationsService {
 	}
 
 	async makeRequest(requesterId: number, recipientId: number, type: RelationType) {
-		const relation = await this.findOne(requesterId, recipientId);
+		const relation = await this.findOneBetweenUsers(requesterId, recipientId);
 
 		if (relation) {
 			if (relation.isAccepted) {
@@ -48,6 +57,44 @@ export class RelationsService {
 					connect: { id: recipientId }
 				},
 				type: type
+			}
+		});
+	}
+
+	async getRequests(userId: number): Promise<Relation[]> {
+		const relations = await this.prisma.relation.findMany({
+			where: {
+				requestTo: {
+					id: userId
+				},
+				isAccepted: false
+			}
+		});
+
+		return relations;
+	}
+
+	async acceptRequest(userId: number, requestId: number) {
+		const relation = await this.findOne(requestId);
+
+		if (!relation) {
+			throw new ForbiddenException("Cette demande n'existe pas");
+		}
+
+		if (relation.requestToId !== userId) {
+			throw new ForbiddenException("Vous n'avez pas la permission d'accepter cette demande");
+		}
+
+		if (relation.isAccepted) {
+			throw new ForbiddenException("Cette demande a déjà été acceptée");
+		}
+
+		await this.prisma.relation.update({
+			where: {
+				id: relation.id
+			},
+			data: {
+				isAccepted: true
 			}
 		});
 	}

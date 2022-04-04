@@ -1,6 +1,7 @@
 import { GetCurrentUserId } from '@/common/decorators';
-import { Body, Controller, Post } from '@nestjs/common';
-import { RequestDto } from './dto';
+import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import { Relation } from '@prisma/client';
+import { AcceptRequestDto, MakeRequestDto } from './dto';
 import { RelationsService } from './relations.service';
 
 @Controller('relations')
@@ -11,8 +12,18 @@ export class RelationsController {
 	) {}
 
 	@Post('request')
-	request(@GetCurrentUserId() userId: number, @Body() dto: RequestDto) {
+	request(@GetCurrentUserId() userId: number, @Body() dto: MakeRequestDto) {
 		return this.relationsService.makeRequest(userId, dto.recipientId, dto.type);
+	}
+
+	@Get('requests')
+	requests(@GetCurrentUserId() userId: number): Promise<Relation[]> {
+		return this.relationsService.getRequests(userId);
+	}
+
+	@Patch('request/accept')
+	acceptRequest(@GetCurrentUserId() userId: number, @Body() dto: AcceptRequestDto) {
+		return this.relationsService.acceptRequest(userId, dto.requestId);
 	}
 
 }
