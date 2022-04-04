@@ -5,11 +5,12 @@ import { AtGuard } from './common/guards';
 import { RolesGuard } from './common/guards/roles.guard';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
+import { RelationsModule } from './relations/relations.module';
 
 @Module({
   imports: [
 		AuthModule, 
-		PrismaModule, UsersModule
+		PrismaModule, UsersModule, RelationsModule
 	],
 	providers: [
 		{

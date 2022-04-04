@@ -1,6 +1,6 @@
-import { Role } from "../models/role.model";
+import { UserRole } from "@prisma/client";
 
 export type User = {
 	displayName: string;
-	role: Role;
+	role: UserRole;
 }

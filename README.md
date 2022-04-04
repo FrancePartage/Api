@@ -9,7 +9,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Inscription
 - [x] Connexion
 - [x] Deconnexion
-- [x] Rafraicher les tokens
+- [x] Rafraichir les tokens
 
 ### Ressources
 

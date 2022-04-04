@@ -1,6 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Role } from './models/role.model';
 import { User } from './types';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class UsersService {
 
 		return {
 			displayName: displayName,
-			role: Role[user['role'] as keyof Role]
+			role: user['role']
 		};
 	}
 

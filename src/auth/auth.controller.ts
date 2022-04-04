@@ -1,7 +1,6 @@
-import { GetCurrentUser, GetCurrentUserId, Public, Roles } from '@/common/decorators';
+import { GetCurrentUser, GetCurrentUserId, Public } from '@/common/decorators';
 import { RtGuard } from '@/common/guards';
-import { Role } from '@/users/models/role.model';
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto, SignUpDto } from './dto';
 import { Tokens } from './types';
