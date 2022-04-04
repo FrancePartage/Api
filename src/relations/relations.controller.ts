@@ -13,7 +13,7 @@ export class RelationsController {
 
 	@Get('requests')
 	getRequests(@GetCurrentUserId() userId: number): Promise<Relation[]> {
-		return this.relationsService.findAll(userId);
+		return this.relationsService.findAllRequests(userId);
 	}
 
 	@Get(':userId')

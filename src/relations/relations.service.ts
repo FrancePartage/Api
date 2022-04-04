@@ -73,7 +73,7 @@ export class RelationsService {
 		});
 	}
 
-	async findAll(userId: number): Promise<Relation[]> {
+	async findAllRequests(userId: number): Promise<Relation[]> {
 		const relations = await this.prisma.relation.findMany({
 			where: {
 				requestTo: {
