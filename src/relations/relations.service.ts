@@ -99,4 +99,26 @@ export class RelationsService {
 		});
 	}
 
+	async denyRequest(userId: number, requestId: number) {
+		const relation = await this.findOne(requestId);
+
+		if (!relation) {
+			throw new ForbiddenException("Cette demande n'existe pas");
+		}
+
+		if (relation.requestToId !== userId) {
+			throw new ForbiddenException("Vous n'avez pas la permission de refuser cette demande");
+		}
+
+		if (relation.isAccepted) {
+			throw new ForbiddenException("Cette demande a déjà été acceptée");
+		}
+
+		await this.prisma.relation.delete({
+			where: {
+				id: relation.id
+			}
+		});
+	}
+
 }

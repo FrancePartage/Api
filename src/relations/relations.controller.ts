@@ -1,7 +1,7 @@
 import { GetCurrentUserId } from '@/common/decorators';
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { Relation } from '@prisma/client';
-import { AcceptRequestDto, GetRelationBetweenUsersDto, MakeRequestDto } from './dto';
+import { AcceptRequestDto, DenyRequestDto, GetRelationBetweenUsersDto, MakeRequestDto } from './dto';
 import { RelationsService } from './relations.service';
 
 @Controller('relations')
@@ -29,6 +29,11 @@ export class RelationsController {
 	@Patch('request/accept')
 	acceptRequest(@GetCurrentUserId() userId: number, @Body() dto: AcceptRequestDto) {
 		return this.relationsService.acceptRequest(userId, dto.requestId);
+	}
+
+	@Delete('request/deny')
+	denyRequest(@GetCurrentUserId() userId: number, @Body() dto: DenyRequestDto) {
+		return this.relationsService.denyRequest(userId, dto.requestId);
 	}
 
 }
