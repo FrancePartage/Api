@@ -1,7 +1,8 @@
-import { GetCurrentUserId } from '@/common/decorators';
+import { GetCurrentUserId, Public } from '@/common/decorators';
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { Relation } from '@prisma/client';
 import { AcceptRequestDto, CancelRequestDto, DenyRequestDto, GetRelationBetweenUsersDto, MakeRequestDto, RemoveRequestDto } from './dto';
+import { GetRelationsOfUserDto } from './dto/get-relations-of-user.dto';
 import { RelationsService } from './relations.service';
 
 @Controller('relations')
@@ -11,12 +12,18 @@ export class RelationsController {
 		private relationsService: RelationsService
 	) {}
 
+	@Get(':userId')
+	@Public()
+	async getRelations(@Param() params: GetRelationsOfUserDto): Promise<Relation[]> {
+		return this.relationsService.findAll(parseInt(params.userId));
+	}
+
 	@Delete('/')
 	removeRequest(@GetCurrentUserId() userId: number, @Body() dto: RemoveRequestDto) {
 		return this.relationsService.remove(userId, dto.requestId);
 	}
 
-	@Get(':userId')
+	@Get('user/:userId')
 	async getRelationBetweenUsers(@GetCurrentUserId() userId: number, @Param() params: GetRelationBetweenUsersDto): Promise<Relation> {
 		return this.relationsService.findOneBetweenUsers(userId, parseInt(params.userId));
 	}

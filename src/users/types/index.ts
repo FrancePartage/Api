@@ -1,1 +1,1 @@
-export * from './user.type';
+export * from './computed-user.type';

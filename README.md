@@ -28,7 +28,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Envoyer une demande pour entrer en relation
 - [x] Accepter une demande
 - [x] Recuperer les demandes
-- [ ] Recuperer les relations d'un utilisateur
+- [x] Recuperer les relations d'un utilisateur
 - [x] Refuser une demande
 - [x] Annuler une demande
 - [x] Supprimer une relation

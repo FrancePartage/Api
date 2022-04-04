@@ -1,6 +1,6 @@
 import { UserRole } from "@prisma/client";
 
-export type User = {
+export type ComputedUser = {
 	displayName: string;
 	role: UserRole;
 }

@@ -1,4 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service';
+import { computeAllUsers } from '@/users/helpers';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Relation, RelationType } from '@prisma/client';
 
@@ -8,6 +9,33 @@ export class RelationsService {
 	constructor(
 		private prisma: PrismaService,
 	) {}
+
+	async findAll(userId: number) {
+		const relations = await this.prisma.relation.findMany({
+			where: {
+				participants: {
+					some: {
+						id: userId
+					}
+				},
+				isAccepted: true
+			},
+			include: {
+				participants: true
+			}
+		});
+
+		const computedRelations = [];
+
+		relations.map(relation => { 
+			computedRelations.push({
+				...relation,
+				participants: computeAllUsers(relation.participants)
+			});
+		});
+
+		return computedRelations;
+	}
 
 	async findOne(id: number): Promise<Relation> {
 		const relation = await this.prisma.relation.findFirst({

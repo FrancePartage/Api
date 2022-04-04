@@ -1,6 +1,7 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { User } from './types';
+import { computeUser } from './helpers';
+import { ComputedUser } from './types';
 
 @Injectable()
 export class UsersService {
@@ -9,7 +10,7 @@ export class UsersService {
 		private prisma: PrismaService
 	) {}
 
-	async findOne(userId: number): Promise<User> {
+	async findOne(userId: number): Promise<ComputedUser> {
 		const user = await this.prisma.user.findUnique({
 			where: {
 				id: userId
@@ -18,18 +19,7 @@ export class UsersService {
 
 		if (!user) throw new Error("User not found");
 
-		let displayName = '';
-
-		if (!user['acceptRgpd'] || !user['firstname'] || !user['lastname']) {
-			displayName = user['username'];
-		} else {
-			displayName = `${user['firstname']} ${user['lastname']}`;
-		}
-
-		return {
-			displayName: displayName,
-			role: user['role']
-		};
+		return computeUser(user);
 	}
 
 }
