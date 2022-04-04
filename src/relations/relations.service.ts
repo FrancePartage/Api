@@ -46,6 +46,28 @@ export class RelationsService {
 		return relation;
 	}
 
+	async remove(userId: number, relationId: number) {
+		const relation = await this.findOneIncludeParticipants(relationId);
+
+		if (!relation) {
+			throw new ForbiddenException("Cette relation n'existe pas");
+		}
+
+		if (!relation.participants.find(x => x.id === userId)) {
+			throw new ForbiddenException("Vous n'avez pas la permission de supprimer cette relation");
+		}
+
+		if (!relation.isAccepted) {
+			throw new ForbiddenException("Cette relation n'est pas encore acceptée");
+		}
+
+		await this.prisma.relation.delete({
+			where: {
+				id: relation.id
+			}
+		});
+	}
+
 	async makeRequest(requesterId: number, recipientId: number, type: RelationType) {
 		const relation = await this.findOneBetweenUsers(requesterId, recipientId);
 
