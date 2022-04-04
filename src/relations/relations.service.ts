@@ -29,7 +29,11 @@ export class RelationsService {
 		const relation = await this.findOne(requesterId, recipientId);
 
 		if (relation) {
-			throw new ForbiddenException("Vous êtes déjà en relation avec cette personne");
+			if (relation.isAccepted) {
+				throw new ForbiddenException("Vous êtes déjà en relation avec cette personne");
+			} else {
+				throw new ForbiddenException("Vous avez déjà envoyé une demande de relation à cette personne");
+			}
 		}
 
 		await this.prisma.relation.create({
