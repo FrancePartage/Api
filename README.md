@@ -31,3 +31,4 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [ ] Refuser une demande
 - [ ] Annuler une demande
 - [ ] Supprimer une relation
+- [ ] Recuperer une relation avec un utilisateur

@@ -9,7 +9,7 @@ export class RelationsService {
 		private prisma: PrismaService,
 	) {}
 
-	async findOne(id: number) {
+	async findOne(id: number): Promise<Relation> {
 		const relation = await this.prisma.relation.findFirst({
 			where: {
 				id: id
@@ -18,7 +18,7 @@ export class RelationsService {
 		return relation;
 	}
 
-	async findOneBetweenUsers(userId: number, recipientId: number) {
+	async findOneBetweenUsers(userId: number, recipientId: number): Promise<Relation> {
 		const relation = await this.prisma.relation.findFirst({
 			where: {
 				participants: {
@@ -61,7 +61,7 @@ export class RelationsService {
 		});
 	}
 
-	async getRequests(userId: number): Promise<Relation[]> {
+	async findAll(userId: number): Promise<Relation[]> {
 		const relations = await this.prisma.relation.findMany({
 			where: {
 				requestTo: {
