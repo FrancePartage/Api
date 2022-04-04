@@ -1,7 +1,7 @@
 import { GetCurrentUserId } from '@/common/decorators';
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { Relation } from '@prisma/client';
-import { AcceptRequestDto, DenyRequestDto, GetRelationBetweenUsersDto, MakeRequestDto } from './dto';
+import { AcceptRequestDto, CancelRequestDto, DenyRequestDto, GetRelationBetweenUsersDto, MakeRequestDto } from './dto';
 import { RelationsService } from './relations.service';
 
 @Controller('relations')
@@ -34,6 +34,11 @@ export class RelationsController {
 	@Delete('request/deny')
 	denyRequest(@GetCurrentUserId() userId: number, @Body() dto: DenyRequestDto) {
 		return this.relationsService.denyRequest(userId, dto.requestId);
+	}
+
+	@Delete('request/cancel')
+	cancelRequest(@GetCurrentUserId() userId: number, @Body() dto: CancelRequestDto) {
+		return this.relationsService.cancelRequest(userId, dto.requestId);
 	}
 
 }

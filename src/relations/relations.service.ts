@@ -18,6 +18,18 @@ export class RelationsService {
 		return relation;
 	}
 
+	async findOneIncludeParticipants(id: number) {
+		const relation = await this.prisma.relation.findFirst({
+			where: {
+				id: id
+			},
+			include: {
+				participants: true
+			}
+		});
+		return relation;
+	}
+
 	async findOneBetweenUsers(userId: number, recipientId: number): Promise<Relation> {
 		const relation = await this.prisma.relation.findFirst({
 			where: {
@@ -108,6 +120,32 @@ export class RelationsService {
 
 		if (relation.requestToId !== userId) {
 			throw new ForbiddenException("Vous n'avez pas la permission de refuser cette demande");
+		}
+
+		if (relation.isAccepted) {
+			throw new ForbiddenException("Cette demande a déjà été acceptée");
+		}
+
+		await this.prisma.relation.delete({
+			where: {
+				id: relation.id
+			}
+		});
+	}
+
+	async cancelRequest(userId: number, requestId: number) {
+		const relation = await this.findOneIncludeParticipants(requestId);
+
+		if (!relation) {
+			throw new ForbiddenException("Cette demande n'existe pas");
+		}
+
+		if (!relation.participants.find(x => x.id === userId)) {
+			throw new ForbiddenException("Vous n'avez pas la permission de supprimer cette demande");
+		}
+
+		if (relation.requestToId === userId) {
+			throw new ForbiddenException("Vous n'avez pas la permission de supprimer cette demande");
 		}
 
 		if (relation.isAccepted) {
