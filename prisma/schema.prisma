@@ -24,6 +24,7 @@ model User {
 	relations						Relation[] 	@relation(name: "relations")
 	relationRequests		Relation[] 	@relation(name: "requests")
 	resources						Resource[] 	@relation(name: "resources")
+	avatar							String			@default("default.png")
 
 	createdAt 					DateTime 		@default(now())
 	updatedAt 					DateTime 		@default(now())

@@ -11,6 +11,11 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Deconnexion
 - [x] Rafraichir les tokens
 
+### Utilisateurs
+
+- [ ] Changer son avatar
+- [ ] Récuperer l'avatar d'un utilisateur
+
 ### Ressources
 
 - [ ] Ajouter une ressource

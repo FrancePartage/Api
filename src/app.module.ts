@@ -6,11 +6,12 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { RelationsModule } from './relations/relations.module';
+import { AssetsModule } from './assets/assets.module';
 
 @Module({
   imports: [
 		AuthModule, 
-		PrismaModule, UsersModule, RelationsModule
+		PrismaModule, UsersModule, RelationsModule, AssetsModule
 	],
 	providers: [
 		{
