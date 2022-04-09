@@ -7,11 +7,12 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { RelationsModule } from './relations/relations.module';
 import { AssetsModule } from './assets/assets.module';
+import { ResourcesModule } from './resources/resources.module';
 
 @Module({
   imports: [
 		AuthModule, 
-		PrismaModule, UsersModule, RelationsModule, AssetsModule
+		PrismaModule, UsersModule, RelationsModule, AssetsModule, ResourcesModule
 	],
 	providers: [
 		{

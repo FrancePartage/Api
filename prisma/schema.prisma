@@ -53,6 +53,8 @@ model Resource {
 	authorId 						Int
 	author 							User 						@relation(name: "resources", fields: [authorId], references: [id])
 	status							ResourceStatus	@default(PENDING)
+	title								String
+	cover								String
 	content							String					@db.Text()
 	tags								String[]
 
