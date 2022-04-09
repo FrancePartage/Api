@@ -13,8 +13,8 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 
 ### Utilisateurs
 
-- [ ] Changer son avatar
-- [ ] Récuperer l'avatar d'un utilisateur
+- [x] Changer son avatar
+- [x] Récuperer l'avatar d'un utilisateur
 
 ### Ressources
 

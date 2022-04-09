@@ -54,6 +54,7 @@ model Resource {
 	author 							User 						@relation(name: "resources", fields: [authorId], references: [id])
 	status							ResourceStatus	@default(PENDING)
 	content							String					@db.Text()
+	tags								String[]
 
 	createdAt 					DateTime 				@default(now())
 	updatedAt 					DateTime 				@default(now())
