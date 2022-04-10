@@ -1,11 +1,12 @@
-import { Body, Controller, ForbiddenException, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Get, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ResourcesService } from './resources.service';
 import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
-import { GetCurrentUserId } from '@/common/decorators';
+import { GetCurrentUserId, Public } from '@/common/decorators';
 import { CreateResourceDto } from './dto';
+import { GetResourcesQuery } from './queries';
 
 export const storage = {
 	storage: diskStorage({
@@ -38,7 +39,13 @@ export class ResourcesController {
 		private resourcesService: ResourcesService
 	) {}
 
-	@Post('')
+	@Get('/')
+	@Public()
+	async findAll(@Query() queryParams: GetResourcesQuery) {
+		return this.resourcesService.findAll(queryParams.page, queryParams.limit);
+	}
+
+	@Post('/')
 	@UseInterceptors(FileInterceptor('coverFile', storage))
 	async create(@GetCurrentUserId() userId: number, @UploadedFile() coverFile: any, @Body() dto: CreateResourceDto) {
 		return await this.resourcesService.create(userId, coverFile, dto);
