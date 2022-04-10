@@ -15,6 +15,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 
 - [x] Changer son avatar
 - [x] Récuperer l'avatar d'un utilisateur
+- [ ] Récuperer les utilisateurs (Pagination)
 
 ### Ressources
 
@@ -22,12 +23,15 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [ ] Supprimer une ressource
 - [ ] Modifier une ressource
 - [ ] Récuperer une ressource
-- [ ] Récuperer des ressources (pagination)
+- [ ] Récuperer des ressources (Pagination)
 - [ ] Mettre en favori
 - [ ] Ajouter une commentaire
 - [ ] Supprimer un commentaire
 - [ ] Répondre à un commentaire
 - [ ] Récuperer les ressources en attente d'approbation
+- [ ] Changer le statut d'une ressource (Modérateur)
+- [ ] Tags populaires
+- [ ] Récuperation des ressources avec un tag
 
 ### Relations
 
@@ -39,3 +43,4 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Annuler une demande
 - [x] Supprimer une relation
 - [x] Recuperer la relation avec un utilisateur
+- [ ] Suggestions d'utilisateurs avec lesquelles l'utilisateur n'est pas en relation

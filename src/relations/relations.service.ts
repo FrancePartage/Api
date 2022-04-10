@@ -7,7 +7,7 @@ import { Relation, RelationType } from '@prisma/client';
 export class RelationsService {
 
 	constructor(
-		private prisma: PrismaService,
+		private prisma: PrismaService
 	) {}
 
 	async findAll(userId: number) {
