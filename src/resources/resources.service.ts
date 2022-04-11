@@ -41,4 +41,23 @@ export class ResourcesService {
 		});
 	}
 
+	async findPopularTags() {
+		const tags = await this.prisma.$queryRaw`
+			SELECT
+					tag,
+					COUNT(*) AS "count"
+			FROM 
+					"resources" AS s
+			CROSS JOIN LATERAL UNNEST(s."tags") AS tags(tag)
+			GROUP BY
+					tag
+			ORDER BY 2 DESC
+			LIMIT 5
+		`;
+
+		return {
+			data: tags
+		}
+	}
+
 }

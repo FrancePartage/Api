@@ -51,4 +51,10 @@ export class ResourcesController {
 		return await this.resourcesService.create(userId, coverFile, dto);
 	}
 
+	@Get('tags/popular')
+	@Public()
+	async findPopularTags() {
+		return this.resourcesService.findPopularTags();
+	}
+
 }

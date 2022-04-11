@@ -1,6 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { computeUser } from './helpers';
+import { computeAllUsers, computeUser } from './helpers';
 import { Avatar, ComputedUser } from './types';
 import fs = require('fs');
 
@@ -41,6 +41,35 @@ export class UsersService {
 
 		return {
 			imagePath: file.filename
+		};
+	}
+
+	async findAllRelations(userId: number) {
+		const relations = await this.prisma.relation.findMany({
+			where: {
+				participants: {
+					some: {
+						id: userId
+					}
+				},
+				isAccepted: true
+			},
+			include: {
+				participants: true
+			}
+		});
+		
+		const computedRelations = [];
+
+		relations.map(relation => { 
+			computedRelations.push({
+				...relation,
+				participants: computeAllUsers(relation.participants)
+			});
+		});
+
+		return {
+			data: computedRelations
 		};
 	}
 

@@ -10,33 +10,6 @@ export class RelationsService {
 		private prisma: PrismaService
 	) {}
 
-	async findAll(userId: number) {
-		const relations = await this.prisma.relation.findMany({
-			where: {
-				participants: {
-					some: {
-						id: userId
-					}
-				},
-				isAccepted: true
-			},
-			include: {
-				participants: true
-			}
-		});
-		
-		const computedRelations = [];
-
-		relations.map(relation => { 
-			computedRelations.push({
-				...relation,
-				participants: computeAllUsers(relation.participants)
-			});
-		});
-
-		return computedRelations;
-	}
-
 	async findOne(id: number): Promise<Relation> {
 		const relation = await this.prisma.relation.findFirst({
 			where: {
@@ -58,7 +31,7 @@ export class RelationsService {
 		return relation;
 	}
 
-	async findOneBetweenUsers(userId: number, recipientId: number): Promise<Relation> {
+	async findOneBetweenUsers(userId: number, recipientId: number) {
 		const relation = await this.prisma.relation.findFirst({
 			where: {
 				participants: {
@@ -71,7 +44,9 @@ export class RelationsService {
 			}
 		});
 
-		return relation;
+		return {
+			data: relation
+		};
 	}
 
 	async remove(userId: number, relationId: number) {
@@ -97,7 +72,7 @@ export class RelationsService {
 	}
 
 	async makeRequest(requesterId: number, recipientId: number, type: RelationType) {
-		const relation = await this.findOneBetweenUsers(requesterId, recipientId);
+		const relation = (await this.findOneBetweenUsers(requesterId, recipientId)).data;
 
 		if (relation) {
 			if (relation.isAccepted) {
@@ -123,7 +98,7 @@ export class RelationsService {
 		});
 	}
 
-	async findAllRequests(userId: number): Promise<Relation[]> {
+	async findAllRequests(userId: number) {
 		const relations = await this.prisma.relation.findMany({
 			where: {
 				requestTo: {
@@ -133,7 +108,9 @@ export class RelationsService {
 			}
 		});
 
-		return relations;
+		return {
+			data: relations
+		};
 	}
 
 	async acceptRequest(userId: number, requestId: number) {

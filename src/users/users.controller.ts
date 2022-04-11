@@ -1,11 +1,12 @@
-import { GetCurrentUser, GetCurrentUserId } from '@/common/decorators';
-import { Controller, ForbiddenException, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { GetCurrentUser, GetCurrentUserId, Public } from '@/common/decorators';
+import { Controller, ForbiddenException, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from './users.service';
 import path = require('path');
 import { Avatar } from './types';
+import { GetRelationsOfUserDto } from './dto';
 
 export const storage = {
 	storage: diskStorage({
@@ -42,6 +43,12 @@ export class UsersController {
 	@UseInterceptors(FileInterceptor('file', storage))
 	uploadAvatar(@GetCurrentUserId() userId: number, @GetCurrentUser('avatar') currentAvatar: String, @UploadedFile() file: any): Promise<Avatar> {
 		return this.usersService.uploadAvatar(userId, currentAvatar, file);
+	}
+
+	@Get(':userId/relations')
+	@Public()
+	async getRelations(@Param() params: GetRelationsOfUserDto) {
+		return this.usersService.findAllRelations(parseInt(params.userId));
 	}
 
 }
