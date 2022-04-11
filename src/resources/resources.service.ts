@@ -17,6 +17,9 @@ export class ResourcesService {
 			{
 				where: {
 					status: ResourceStatus.APPROVED
+				},
+				orderBy: {
+					createdAt: 'desc'
 				}
 			}, 
 			page, 
