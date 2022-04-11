@@ -24,7 +24,7 @@ export class RelationsService {
 				participants: true
 			}
 		});
-
+		
 		const computedRelations = [];
 
 		relations.map(relation => { 

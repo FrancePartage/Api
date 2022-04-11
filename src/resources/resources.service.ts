@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { CreateResourceDto } from './dto';
 import { paginateResources } from '@/common/pagination/paginate';
+import { ResourceStatus } from '@prisma/client';
 
 @Injectable()
 export class ResourcesService {
@@ -13,7 +14,11 @@ export class ResourcesService {
 	async findAll(page: number, limit: number) {
 		return await paginateResources(
 			this.prisma, 
-			{}, 
+			{
+				where: {
+					status: ResourceStatus.APPROVED
+				}
+			}, 
 			page, 
 			limit
 		);

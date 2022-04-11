@@ -19,11 +19,11 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 
 ### Ressources
 
-- [ ] Ajouter une ressource
+- [x] Ajouter une ressource
 - [ ] Supprimer une ressource
 - [ ] Modifier une ressource
 - [ ] Récuperer une ressource
-- [ ] Récuperer des ressources (Pagination)
+- [x] Récuperer des ressources (Pagination)
 - [ ] Mettre en favori
 - [ ] Ajouter une commentaire
 - [ ] Supprimer un commentaire
@@ -31,7 +31,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [ ] Récuperer les ressources en attente d'approbation
 - [ ] Changer le statut d'une ressource (Modérateur)
 - [ ] Tags populaires
-- [ ] Récuperation des ressources avec un tag
+- [ ] Récuperation des ressources par tag
 
 ### Relations
 

@@ -1,10 +1,11 @@
 import { PrismaService } from "@/prisma/prisma.service"
+import { computeUser } from "@/users/helpers";
 import { PaginationData } from "./types"
 
 export const paginateResources = async (prisma: PrismaService, options: any, page: number = 1, limit: number = 10): Promise<PaginationData> => {
 	if (limit > 100) limit = 100;
 
-	const resourcesCount: number = await prisma.resource.count();
+	const resourcesCount: number = await prisma.resource.count({ ...options });
 	const pageCount: number = Math.ceil(resourcesCount / limit);
 
 	if (page > pageCount) page = pageCount;
@@ -15,13 +16,32 @@ export const paginateResources = async (prisma: PrismaService, options: any, pag
 		skip: (page - 1) * limit
 	};
 
-	const users = await prisma.resource.findMany({
+	const resources = await prisma.resource.findMany({
 		...paginationOptions,
-		...options
+		...options,
+		select: {
+			id: true,
+			authorId: true,
+			status: true,
+			cover: true,
+			tags: true,
+			createdAt: true,
+			updatedAt: true,
+			author: true
+		}
+	});
+
+	const computedResources = [];
+
+	resources.map((resource: any) => {
+		computedResources.push({
+			...resource,
+			author: computeUser(resource.author)
+		});
 	});
 
 	return {
-		data: users,
+		data: computedResources,
 		pagination: {
 			currentPage: parseInt(page.toString()),
 			limit: parseInt(limit.toString()),
