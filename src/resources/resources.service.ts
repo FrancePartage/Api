@@ -60,4 +60,23 @@ export class ResourcesService {
 		}
 	}
 
+	async findByTag(tag: string, page: number, limit: number) {
+		return await paginateResources(
+			this.prisma, 
+			{
+				where: {
+					status: ResourceStatus.APPROVED,
+					tags: {
+						has: tag
+					}
+				},
+				orderBy: {
+					createdAt: 'desc'
+				}
+			}, 
+			page, 
+			limit
+		);
+	}
+
 }

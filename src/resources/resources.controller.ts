@@ -59,8 +59,8 @@ export class ResourcesController {
 
 	@Get('tags/:tag')
 	@Public()
-	findByTag(@Param('tag') tag: string) {
-		
+	findByTag(@Param('tag') tag: string, @Query() queryParams: GetResourcesQuery) {
+		return this.resourcesService.findByTag(tag, queryParams.page, queryParams.limit);
 	}
 
 }
