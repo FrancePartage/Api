@@ -5,7 +5,7 @@ import { ResourcesService } from './resources.service';
 import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
 import { GetCurrentUserId, Public, Roles } from '@/common/decorators';
-import { CreateResourceDto, DeleteResourceDto } from './dto';
+import { CreateResourceDto, DeleteResourceDto, GetResourceDto } from './dto';
 import { GetResourcesQuery } from './queries';
 import { ResourceStatus, UserRole } from '@prisma/client';
 
@@ -62,6 +62,13 @@ export class ResourcesController {
 	async delete(@GetCurrentUserId() userId: number, @Param() params: DeleteResourceDto) {
 		return await this.resourcesService.delete(userId, params);
 	}
+
+	@Get(':id')
+	@Public()
+	async find(@Param() params: GetResourceDto) {
+		return await this.resourcesService.find(parseInt(params.id.toString()));
+	}
+
 
 	@Get('tags')
 	@Public()

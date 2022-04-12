@@ -3,6 +3,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { CreateResourceDto, DeleteResourceDto } from './dto';
 import { paginateResources } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
+import { computeUser } from '@/users/helpers';
 
 @Injectable()
 export class ResourcesService {
@@ -12,11 +13,16 @@ export class ResourcesService {
 	) {}
 
 	async find(id: number) {
-		const resource = await this.prisma.resource.findFirst({
+		const resource: any = await this.prisma.resource.findFirst({
 			where: {
 				id: id
+			},
+			include: {
+				author: true
 			}
 		});
+
+		resource.author = computeUser(resource.author);
 
 		return {
 			data: resource

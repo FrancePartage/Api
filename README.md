@@ -22,7 +22,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Ajouter une ressource
 - [x] Supprimer une ressource
 - [ ] Modifier une ressource
-- [ ] Récuperer une ressource
+- [x] Récuperer une ressource
 - [x] Récuperer des ressources (Pagination)
 - [ ] Mettre en favori
 - [ ] Ajouter une commentaire
