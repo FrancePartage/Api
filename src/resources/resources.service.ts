@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { CreateResourceDto } from './dto';
+import { CreateResourceDto, DeleteResourceDto } from './dto';
 import { paginateResources } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 
@@ -10,6 +10,18 @@ export class ResourcesService {
 	constructor(
 		private prisma: PrismaService
 	) {}
+
+	async find(id: number) {
+		const resource = await this.prisma.resource.findFirst({
+			where: {
+				id: id
+			}
+		});
+
+		return {
+			data: resource
+		};
+	}
 
 	async findAll(page: number, limit: number) {
 		return await paginateResources(
@@ -37,6 +49,25 @@ export class ResourcesService {
 				cover: coverFile.filename,
 				content: dto.content,
 				tags: dto.tags
+			}
+		});
+	}
+
+	async delete(userId: number, dto: DeleteResourceDto) {
+		const resourceId: number = parseInt(dto.id.toString());
+		const resource = (await this.find(resourceId)).data;
+
+		if (!resource) {
+			throw new ForbiddenException("Ressource non trouvée");
+		}
+
+		if (resource.authorId !== userId) {
+			throw new ForbiddenException("Vous n'êtes pas l'auteur de cette ressource");
+		}
+
+		 await this.prisma.resource.delete({
+			where: {
+				id: resourceId
 			}
 		});
 	}
