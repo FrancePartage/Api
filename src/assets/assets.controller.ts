@@ -10,10 +10,16 @@ export class AssetsController {
 		private assetsService: AssetsService
 	) {}
 
-	@Get('avatar/:imageName')
+	@Get('avatars/:imageName')
 	@Public()
 	findAvatar(@Param('imageName') imageName: string, @Res() res): Observable<Object> {
 		return this.assetsService.findAvatar(imageName, res);
+	}
+
+	@Get('covers/:imageName')
+	@Public()
+	findCover(@Param('imageName') imageName: string, @Res() res): Observable<Object> {
+		return this.assetsService.findCover(imageName, res);
 	}
 
 }

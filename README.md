@@ -32,7 +32,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [ ] Changer le statut d'une ressource (Modérateur)
 - [x] Tags populaires
 - [x] Récuperation des ressources par tag
-- [ ] Récuperer la couverture d'une ressource
+- [x] Récuperer la couverture d'une ressource
 
 ### Relations
 
