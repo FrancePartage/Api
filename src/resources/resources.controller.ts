@@ -1,4 +1,4 @@
-import { Body, Controller, ForbiddenException, Get, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ResourcesService } from './resources.service';
@@ -51,10 +51,16 @@ export class ResourcesController {
 		return await this.resourcesService.create(userId, coverFile, dto);
 	}
 
-	@Get('tags/popular')
+	@Get('tags')
 	@Public()
 	async findPopularTags() {
 		return this.resourcesService.findPopularTags();
+	}
+
+	@Get('tags/:tag')
+	@Public()
+	findByTag(@Param('tag') tag: string) {
+		
 	}
 
 }

@@ -47,10 +47,10 @@ export class ResourcesService {
 					tag,
 					COUNT(*) AS "count"
 			FROM 
-					"resources" AS s
-			CROSS JOIN LATERAL UNNEST(s."tags") AS tags(tag)
-			GROUP BY
-					tag
+					"resources" AS r
+			CROSS JOIN LATERAL UNNEST(r."tags") AS tags(tag)
+			WHERE r.status = 'APPROVED'
+			GROUP BY tag
 			ORDER BY 2 DESC
 			LIMIT 5
 		`;
