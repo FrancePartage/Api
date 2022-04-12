@@ -28,7 +28,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [ ] Ajouter une commentaire
 - [ ] Supprimer un commentaire
 - [ ] Répondre à un commentaire
-- [ ] Récuperer les ressources en attente d'approbation
+- [x] Récuperer les ressources en attente d'approbation
 - [ ] Changer le statut d'une ressource (Modérateur)
 - [x] Tags populaires
 - [x] Récuperation des ressources par tag

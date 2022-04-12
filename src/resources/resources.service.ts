@@ -23,12 +23,12 @@ export class ResourcesService {
 		};
 	}
 
-	async findAll(page: number, limit: number) {
+	async findAll(page: number, limit: number, status: ResourceStatus = ResourceStatus.APPROVED) {
 		return await paginateResources(
 			this.prisma, 
 			{
 				where: {
-					status: ResourceStatus.APPROVED
+					status: status
 				},
 				orderBy: {
 					createdAt: 'desc'

@@ -4,9 +4,10 @@ import { diskStorage } from 'multer';
 import { ResourcesService } from './resources.service';
 import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
-import { GetCurrentUserId, Public } from '@/common/decorators';
+import { GetCurrentUserId, Public, Roles } from '@/common/decorators';
 import { CreateResourceDto, DeleteResourceDto } from './dto';
 import { GetResourcesQuery } from './queries';
+import { ResourceStatus, UserRole } from '@prisma/client';
 
 export const storage = {
 	storage: diskStorage({
@@ -43,6 +44,12 @@ export class ResourcesController {
 	@Public()
 	async findAll(@Query() queryParams: GetResourcesQuery) {
 		return this.resourcesService.findAll(queryParams.page, queryParams.limit);
+	}
+
+	@Get('pendings')
+	@Roles(UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN)
+	async findAllPendings(@Query() queryParams: GetResourcesQuery) {
+		return this.resourcesService.findAll(queryParams.page, queryParams.limit, ResourceStatus.PENDING);
 	}
 
 	@Post('/')
