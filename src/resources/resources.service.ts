@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { CreateResourceDto, DeleteResourceDto } from './dto';
+import { CreateResourceDto, DeleteResourceDto, UpdateResourceDto, UpdateResourceParamDto } from './dto';
 import { paginateResources } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 import { computeUser } from '@/users/helpers';
@@ -22,7 +22,7 @@ export class ResourcesService {
 			}
 		});
 
-		resource.author = computeUser(resource.author);
+		if (resource) resource.author = computeUser(resource.author);
 
 		return {
 			data: resource
@@ -75,6 +75,40 @@ export class ResourcesService {
 			where: {
 				id: resourceId
 			}
+		});
+	}
+
+	async update(userId: number, params: UpdateResourceParamDto, dto: UpdateResourceDto) {
+		const resourceId: number = parseInt(params.id.toString());
+		const resource = (await this.find(resourceId)).data;
+		
+		if (!resource) {
+			throw new ForbiddenException("Ressource non trouvée");
+		}
+
+		if (resource.authorId !== userId) {
+			throw new ForbiddenException("Vous n'êtes pas l'auteur de cette ressource");
+		}
+
+		const updateOptions: any = {};
+
+		if (dto.title) {
+			updateOptions.title = dto.title;
+		}
+
+		if (dto.content) {
+			updateOptions.content = dto.content;
+		}
+
+		if (dto.tags) {
+			updateOptions.tags = dto.tags;
+		}
+
+		await this.prisma.resource.update({
+			where: {
+				id: resourceId
+			},
+			data: updateOptions
 		});
 	}
 
