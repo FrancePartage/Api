@@ -4,6 +4,7 @@ import * as argon2 from 'argon2';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { SignInDto, SignUpDto } from './dto';
+import { computeUser } from '@/users/helpers';
 
 @Injectable()
 export class AuthService {
@@ -83,6 +84,18 @@ export class AuthService {
 
 		const tokens = await this.getTokens(user.id, user.email);
 		return tokens;
+	}
+
+	async me(userId: number) {
+		const user = await this.prisma.user.findUnique({
+			where: {
+				id: userId
+			}
+		});
+
+		if (!user) throw new ForbiddenException("Accès refusé");
+
+		return computeUser(user);
 	}
 
 	async updateRtHash(userId: number, rt: string) {

@@ -10,6 +10,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Connexion
 - [x] Deconnexion
 - [x] Rafraichir les tokens
+- [x] Récuperer les informations de l'utilisateur avec son token (/me)
 
 ### Utilisateurs
 
@@ -17,7 +18,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [ ] Changer ses informations (Nom d'utilisateur, Prénom, Nom)
 - [x] Changer son avatar
 - [x] Récuperer l'avatar d'un utilisateur
-- [ ] Récuperer les utilisateurs (Pagination)
+- [ ] Récuperer les utilisateurs (Modérateur, Pagination)
 
 ### Ressources
 
