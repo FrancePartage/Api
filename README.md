@@ -48,4 +48,4 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Annuler une demande
 - [x] Supprimer une relation
 - [x] Recuperer la relation avec un utilisateur
-- [ ] Suggestions d'utilisateurs avec lesquelles l'utilisateur n'est pas en relation
+- [x] Suggestions d'utilisateurs avec lesquelles l'utilisateur n'est pas en relation

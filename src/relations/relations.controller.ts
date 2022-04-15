@@ -46,4 +46,9 @@ export class RelationsController {
 		return this.relationsService.cancelRequest(userId, dto.requestId);
 	}
 
+	@Get('suggestions')
+	async findSuggestions(@GetCurrentUserId() userId: number) {
+		return this.relationsService.findSuggestions(userId);
+	}
+
 }

@@ -186,4 +186,30 @@ export class RelationsService {
 		});
 	}
 
+	async findSuggestions(userId: number) {
+		const relations = await this.prisma.user.findMany({
+			where: {
+				relations: {
+					every: {
+						participants: {
+							every: {
+								id: {
+									not: userId
+								}
+							}
+						}
+					}
+				},
+				NOT: {
+					id: userId
+				}
+			},
+			take: 5
+		});
+
+		return {
+			data: relations
+		}
+	}
+
 }
