@@ -5,9 +5,10 @@ import { ResourcesService } from './resources.service';
 import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
 import { GetCurrentUserId, Public, Roles } from '@/common/decorators';
-import { CreateResourceDto, DeleteResourceDto, GetResourceDto, UpdateResourceDto, UpdateResourceParamDto } from './dto';
+import { CreateResourceDto, DeleteResourceDto, GetResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { GetResourcesQuery } from './queries';
 import { ResourceStatus, UserRole } from '@prisma/client';
+import { UpdateResourceStatusDto } from './dto/update-resource-status.dto';
 
 export const storage = {
 	storage: diskStorage({
@@ -66,6 +67,12 @@ export class ResourcesController {
 	@Patch(':id')
 	async updateOne(@GetCurrentUserId() userId: number, @Param() params: UpdateResourceParamDto, @Body() dto: UpdateResourceDto) {
 		return await this.resourcesService.update(userId, params, dto);
+	}
+
+	@Patch(':id/status')
+	@Roles(UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN)
+	async updateStatus(@Param() params : UpdateResourceStatusParamDto, @Body() dto: UpdateResourceStatusDto) {
+		return await this.resourcesService.updateStatus(params, dto);
 	}
 
 	@Get('pendings')

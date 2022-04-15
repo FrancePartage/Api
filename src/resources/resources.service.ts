@@ -1,9 +1,10 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { CreateResourceDto, DeleteResourceDto, UpdateResourceDto, UpdateResourceParamDto } from './dto';
+import { CreateResourceDto, DeleteResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { paginateResources } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 import { computeUser } from '@/users/helpers';
+import { UpdateResourceStatusDto } from './dto/update-resource-status.dto';
 
 @Injectable()
 export class ResourcesService {
@@ -109,6 +110,24 @@ export class ResourcesService {
 				id: resourceId
 			},
 			data: updateOptions
+		});
+	}
+
+	async updateStatus(params: UpdateResourceStatusParamDto, dto: UpdateResourceStatusDto) {
+		const resourceId: number = parseInt(params.id.toString());
+		const resource = (await this.find(resourceId)).data;
+
+		if (!resource) {
+			throw new ForbiddenException("Ressource non trouvée");
+		}
+
+		await this.prisma.resource.update({
+			where: {
+				id: resourceId
+			},
+			data: {
+				status: dto.status
+			}
 		});
 	}
 

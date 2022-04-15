@@ -19,6 +19,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Changer son avatar
 - [x] Récuperer l'avatar d'un utilisateur
 - [ ] Récuperer les utilisateurs (Modérateur, Pagination)
+- [ ] Changer le role d'un utilisateur (Admin)
 
 ### Ressources
 
@@ -32,7 +33,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [ ] Supprimer un commentaire
 - [ ] Répondre à un commentaire
 - [x] Récuperer les ressources en attente d'approbation
-- [ ] Changer le statut d'une ressource (Modérateur)
+- [x] Changer le statut d'une ressource (Modérateur)
 - [x] Tags populaires
 - [x] Récuperation des ressources par tag
 - [x] Récuperer la couverture d'une ressource
