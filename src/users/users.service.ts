@@ -3,6 +3,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { computeAllUsers, computeUser } from './helpers';
 import { Avatar, ComputedUser } from './types';
 import fs = require('fs');
+import { UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -71,6 +72,23 @@ export class UsersService {
 		return {
 			data: computedRelations
 		};
+	}
+
+	async udpdateRole(currentUserId: number, params: UpdateUserRoleParamDto, dto: UpdateUserRoleDto) {
+		const userId = parseInt(params.userId.toString());
+		const user = await this.findOne(userId);
+
+		if (!user) throw new Error("User not found");
+		if (currentUserId === userId) throw new Error("Vous ne pouvez pas changer votre propre rôle");
+
+		await this.prisma.user.update({
+			where: {
+				id: userId
+			},
+			data: {
+				role: dto.role
+			}
+		});
 	}
 
 }

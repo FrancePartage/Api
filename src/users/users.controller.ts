@@ -1,12 +1,13 @@
-import { GetCurrentUser, GetCurrentUserId, Public } from '@/common/decorators';
-import { Controller, ForbiddenException, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { GetCurrentUser, GetCurrentUserId, Public, Roles } from '@/common/decorators';
+import { Body, Controller, ForbiddenException, Get, Param, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from './users.service';
 import path = require('path');
 import { Avatar } from './types';
-import { GetRelationsOfUserDto } from './dto';
+import { GetRelationsOfUserDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
+import { UserRole } from '@prisma/client';
 
 export const storage = {
 	storage: diskStorage({
@@ -49,6 +50,12 @@ export class UsersController {
 	@Public()
 	async getRelations(@Param() params: GetRelationsOfUserDto) {
 		return this.usersService.findAllRelations(parseInt(params.userId));
+	}
+
+	@Patch(':userId/role')
+	@Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+	async updateRole(@GetCurrentUserId() userId, @Param() params: UpdateUserRoleParamDto, @Body() dto: UpdateUserRoleDto) {
+		return this.usersService.udpdateRole(userId, params, dto);
 	}
 
 }
