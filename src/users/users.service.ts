@@ -5,6 +5,7 @@ import { Avatar, ComputedUser } from './types';
 import fs = require('fs');
 import * as argon2 from 'argon2';
 import { UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
+import { paginateUsers } from '@/common/pagination/paginate';
 
 @Injectable()
 export class UsersService {
@@ -127,6 +128,51 @@ export class UsersService {
 				username: dto.username
 			}
 		});
+	}
+
+	async findAll(page: number, limit: number, search: string) {
+		if (search) {
+			return await paginateUsers(
+				this.prisma, 
+				{
+					where: {
+						OR: [
+							{
+								username: {
+									contains: search
+								}
+							},
+							{
+								firstname: {
+									contains: search
+								}
+							},
+							{
+								lastname: {
+									contains: search
+								}
+							}
+						]
+					},
+					orderBy: {
+						createdAt: 'desc'
+					}
+				}, 
+				page, 
+				limit
+			);
+		}
+
+		return await paginateUsers(
+			this.prisma, 
+			{
+				orderBy: {
+					createdAt: 'desc'
+				}
+			}, 
+			page, 
+			limit
+		);
 	}
 
 }

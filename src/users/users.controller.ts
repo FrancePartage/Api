@@ -1,5 +1,5 @@
 import { GetCurrentUser, GetCurrentUserId, Public, Roles } from '@/common/decorators';
-import { Body, Controller, ForbiddenException, Get, Param, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,6 +8,7 @@ import path = require('path');
 import { Avatar } from './types';
 import { GetRelationsOfUserDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 import { UserRole } from '@prisma/client';
+import { GetUsersQuery } from './queries';
 
 export const storage = {
 	storage: diskStorage({
@@ -39,6 +40,12 @@ export class UsersController {
 	constructor(
 		private readonly usersService: UsersService
 	) {}
+
+	@Get('')
+	@Roles(UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN)
+	findAll(@Query() queryParams: GetUsersQuery) {
+		return this.usersService.findAll(queryParams.page, queryParams.limit, queryParams.search);
+	}
 
 	@Post('avatar')
 	@UseInterceptors(FileInterceptor('file', storage))
