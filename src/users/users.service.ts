@@ -3,7 +3,8 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { computeAllUsers, computeUser } from './helpers';
 import { Avatar, ComputedUser } from './types';
 import fs = require('fs');
-import { UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
+import * as argon2 from 'argon2';
+import { UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -87,6 +88,30 @@ export class UsersService {
 			},
 			data: {
 				role: dto.role
+			}
+		});
+	}
+
+	async updatePassword(userId: number, dto: UpdatePasswordDto) {
+		const user = await this.prisma.user.findUnique({
+			where: {
+				id: userId
+			}
+		});
+
+		if (!user) throw new ForbiddenException("Accès refusé");
+
+		const passwordMatches = await argon2.verify(user.hash, dto.oldPassword);
+		if (!passwordMatches) throw new ForbiddenException("Votre mot de passe est incorrect");
+
+		const hash = await argon2.hash(dto.newPassword);
+
+		await this.prisma.user.update({
+			where: {
+				id: userId
+			},
+			data: {
+				hash: hash
 			}
 		});
 	}

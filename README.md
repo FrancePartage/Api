@@ -14,7 +14,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 
 ### Utilisateurs
 
-- [ ] Changer son mot de passe
+- [x] Changer son mot de passe
 - [ ] Changer ses informations (Nom d'utilisateur, Prénom, Nom)
 - [x] Changer son avatar
 - [x] Récuperer l'avatar d'un utilisateur
