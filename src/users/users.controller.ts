@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from './users.service';
 import path = require('path');
 import { Avatar } from './types';
-import { GetRelationsOfUserDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
+import { GetRelationsOfUserDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 import { UserRole } from '@prisma/client';
 
 export const storage = {
@@ -61,6 +61,11 @@ export class UsersController {
 	@Patch('password')
 	async updatePassword(@GetCurrentUserId() userId: number, @Body() dto: UpdatePasswordDto) {
 		return this.usersService.updatePassword(userId, dto);
+	}
+
+	@Patch('informations')
+	async updateInformations(@GetCurrentUserId() userId: number, @Body() dto: UpdateInformationsDto) {
+		return this.usersService.updateInformations(userId, dto);
 	}
 
 }

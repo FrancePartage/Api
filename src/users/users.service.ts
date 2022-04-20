@@ -4,7 +4,7 @@ import { computeAllUsers, computeUser } from './helpers';
 import { Avatar, ComputedUser } from './types';
 import fs = require('fs');
 import * as argon2 from 'argon2';
-import { UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
+import { UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -112,6 +112,19 @@ export class UsersService {
 			},
 			data: {
 				hash: hash
+			}
+		});
+	}
+
+	async updateInformations(userId: number, dto: UpdateInformationsDto) {
+		await this.prisma.user.update({
+			where: {
+				id: userId
+			},
+			data: {
+				firstname: dto.firstname,
+				lastname: dto.lastname,
+				username: dto.username
 			}
 		});
 	}
