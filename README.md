@@ -2,6 +2,15 @@
 
 API pour la plateforme FrancePartage utilisant le framework NestJS
 
+## Installation
+
+- ```git clone git@github.com:FrancePartage/Api.git```
+- ```cd Api```
+- ```Créer un fichier .env (voir .env.example)```
+- ```Lancer la BDD avec "docker-compose up"```
+- ```Peupler la BDD avec "npx prisma db push"```
+- ```Lancer l'api avec "npm run start:dev"```
+
 ## Todo
 
 ### Authentification
