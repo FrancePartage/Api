@@ -25,6 +25,7 @@ model User {
 	relationRequests		Relation[] 	@relation(name: "requests")
 	resources						Resource[] 	@relation(name: "resources")
 	avatar							String			@default("default.png")
+	comments						Comment[]		@relation(name: "a_comments")
 
 	createdAt 					DateTime 		@default(now())
 	updatedAt 					DateTime 		@default(now())
@@ -57,11 +58,27 @@ model Resource {
 	cover								String
 	content							String					@db.Text()
 	tags								String[]
+	comments						Comment[]				@relation(name: "r_comments")
 
 	createdAt 					DateTime 				@default(now())
 	updatedAt 					DateTime 				@default(now())
 
 	@@map("resources")
+}
+
+model Comment {
+	id									Int 						@id @default(autoincrement())
+
+	authorId 						Int
+	author 							User 						@relation(name: "a_comments", fields: [authorId], references: [id])
+	resourceId					Int
+	resource						Resource				@relation(name: "r_comments", fields: [resourceId], references: [id])
+	content							String
+	parentId						Int?
+	parent							Comment?					@relation(name: "parent", fields: [parentId], references: [id])
+	childs							Comment[]				@relation(name: "parent")
+
+	@@map("comments")
 }
 
 enum UserRole {
