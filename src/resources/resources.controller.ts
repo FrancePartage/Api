@@ -5,7 +5,7 @@ import { ResourcesService } from './resources.service';
 import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
 import { GetCurrentUserId, Public, Roles } from '@/common/decorators';
-import { CreateResourceDto, DeleteResourceDto, GetResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
+import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceDto, FindResourceCommentsParamDto, GetResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { GetResourcesQuery } from './queries';
 import { ResourceStatus, UserRole } from '@prisma/client';
 import { UpdateResourceStatusDto } from './dto/update-resource-status.dto';
@@ -91,6 +91,16 @@ export class ResourcesController {
 	@Public()
 	findByTag(@Param('tag') tag: string, @Query() queryParams: GetResourcesQuery) {
 		return this.resourcesService.findByTag(tag, queryParams.page, queryParams.limit);
+	}
+
+	@Get(':id/comments')
+	findAllComments(@Param() params: FindResourceCommentsParamDto) {
+
+	}
+
+	@Post(':id/comments')
+	createComment(@GetCurrentUserId() userId, @Param() params: AddResourceCommentsParamDto, @Body() dto: AddResourceCommentsDto) {
+
 	}
 
 }

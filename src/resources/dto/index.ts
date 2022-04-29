@@ -5,3 +5,6 @@ export * from './update-resource.dto';
 export * from './update-resource-param.dto';
 export * from './update-resource-status-param.dto';
 export * from './update-resource-status-param.dto';
+export * from './find-resource-comments-param.dto';
+export * from './add-resource-comments-param.dto';
+export * from './add-resource-comments.dto';
