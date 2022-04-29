@@ -2,9 +2,13 @@
 
 API pour la plateforme FrancePartage utilisant le framework NestJS
 
-## Lancement (DEV)
+## Lancement de l'API (DEV)
 
 - ```docker compose up dev```
+
+## Lancement l'API (PROD)
+
+- ```docker compose up prod```
 
 ## Todo
 

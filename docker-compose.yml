@@ -22,17 +22,17 @@ services:
       - db
     build:
       context: .
-      target: development
+      target: nestjs
       dockerfile: ./Dockerfile
     command: npm run start:dev
     ports:
       - 3333:3333
-      - 9229:9229
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/FrancePartage?schema=public"
+      NODE_ENV: development
     restart: unless-stopped
     networks:
       - nestjs-network
@@ -44,17 +44,17 @@ services:
       - db
     build:
       context: .
-      target: production
+      target: nestjs
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
       - 3333:3333
-      - 9229:9229
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/FrancePartage?schema=public"
+      NODE_ENV: develoment
     restart: unless-stopped
     networks:
       - nestjs-network
