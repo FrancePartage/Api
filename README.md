@@ -10,6 +10,10 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 
 - ```docker compose up prod```
 
+## Lancement de Prisma Studio
+
+- ```docker compose up prisma-studio```
+
 ## Todo
 
 ### Authentification

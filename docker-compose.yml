@@ -15,7 +15,7 @@ services:
     networks:
       - nestjs-network
   
-  dev:
+  dev: &dev
     container_name: nestjs_api_dev
     image: nestjs-api-dev:1.0.0
     depends_on:
@@ -30,9 +30,10 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    environment:
+    environment: &dev_environment
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/FrancePartage?schema=public"
       NODE_ENV: development
+      MIGRATE_DATABASE: 1
     restart: unless-stopped
     networks:
       - nestjs-network
@@ -54,10 +55,21 @@ services:
       - /usr/src/app/node_modules
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/FrancePartage?schema=public"
-      NODE_ENV: develoment
+      NODE_ENV: production
+      MIGRATE_DATABASE: 1
     restart: unless-stopped
     networks:
       - nestjs-network
+
+  prisma-studio:
+    <<: *dev
+    container_name: prisma-studio
+    ports:
+      - 5555:5555
+    environment:
+      <<: *dev_environment
+      MIGRATE_DATABASE: 0
+    command: npx prisma studio
 
 networks:
     nestjs-network:
