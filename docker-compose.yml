@@ -12,8 +12,6 @@ services:
       POSTGRES_DB: FrancePartage
     volumes:
       - ./postgres:/var/lib/postgresql/data
-    networks:
-      - nestjs-network
   
   dev: &dev
     container_name: nestjs_api_dev
@@ -35,8 +33,6 @@ services:
       NODE_ENV: development
       MIGRATE_DATABASE: 1
     restart: unless-stopped
-    networks:
-      - nestjs-network
 
   prod:
     container_name: nestjs_api_prod
@@ -58,8 +54,6 @@ services:
       NODE_ENV: production
       MIGRATE_DATABASE: 1
     restart: unless-stopped
-    networks:
-      - nestjs-network
 
   prisma-studio:
     <<: *dev
@@ -70,6 +64,3 @@ services:
       <<: *dev_environment
       MIGRATE_DATABASE: 0
     command: npx prisma studio
-
-networks:
-    nestjs-network:

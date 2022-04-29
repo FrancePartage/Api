@@ -1,5 +1,8 @@
 FROM node:12.19.0-alpine3.9 AS nestjs
 
+EXPOSE 3333
+EXPOSE 5555
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
