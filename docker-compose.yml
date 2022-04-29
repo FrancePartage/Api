@@ -1,12 +1,63 @@
-version: '3'
+version: '3.8'
+
 services:
   db:
+    container_name: database
     image: postgres:12
     ports:
-      - "5432:5432"
+      - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: FrancePartage
     volumes:
       - ./postgres:/var/lib/postgresql/data
+    networks:
+      - nestjs-network
+  
+  dev:
+    container_name: nestjs_api_dev
+    image: nestjs-api-dev:1.0.0
+    depends_on:
+      - db
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    ports:
+      - 3333:3333
+      - 9229:9229
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/FrancePartage?schema=public"
+    restart: unless-stopped
+    networks:
+      - nestjs-network
+
+  prod:
+    container_name: nestjs_api_prod
+    image: nestjs-api-prod:1.0.0
+    depends_on:
+      - db
+    build:
+      context: .
+      target: production
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3333:3333
+      - 9229:9229
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/FrancePartage?schema=public"
+    restart: unless-stopped
+    networks:
+      - nestjs-network
+
+networks:
+    nestjs-network:
