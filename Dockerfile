@@ -14,6 +14,9 @@ RUN npm install
 
 COPY . .
 
+RUN apk update && apk add dos2unix
+RUN dos2unix docker/nodejs/docker-entrypoint.sh
+
 COPY docker/nodejs/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
