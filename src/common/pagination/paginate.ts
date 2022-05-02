@@ -95,3 +95,47 @@ export const paginateUsers = async (prisma: PrismaService, options: any, page: n
 		}
 	}
 }
+
+export const paginateComments = async (prisma: PrismaService, options: any, page: number = 1, limit: number = 10): Promise<PaginationData> => {
+	if (limit > 100) limit = 100;
+
+	const commentsCount: number = await prisma.comment.count({ ...options });
+	const pageCount: number = Math.ceil(commentsCount / limit);
+
+	if (page > pageCount) page = pageCount;
+	if (page <= 0) page = 1;
+
+	const paginationOptions = {
+		take: limit,
+		skip: (page - 1) * limit
+	};
+
+	const comments = await prisma.comment.findMany({
+		...paginationOptions,
+		...options,
+		include: {
+			author: true
+		}
+	});
+
+	const computedComments = [];
+
+	comments.map((comment: any) => {
+		computedComments.push({
+			...comment,
+			author: computeUser(comment.author)
+		});
+	});
+
+	return {
+		data: computedComments,
+		pagination: {
+			currentPage: parseInt(page.toString()),
+			limit: parseInt(limit.toString()),
+			pageCount: pageCount,
+			hasNextPage: page < pageCount,
+			hasPreviousPage: page > 1,
+			itemsCount: commentsCount
+		}
+	}
+}

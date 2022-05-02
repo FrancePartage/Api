@@ -43,7 +43,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [ ] Mettre en favori
 - [x] Ajouter une commentaire
 - [x] Supprimer un commentaire
-- [ ] Lister les commentaires d'une ressource
+- [x] Lister les commentaires d'une ressource
 - [x] Récuperer les ressources en attente d'approbation
 - [x] Changer le statut d'une ressource (Modérateur)
 - [x] Tags populaires

@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
-import { paginateResources } from '@/common/pagination/paginate';
+import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
+import { paginateComments, paginateResources } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 import { computeUser } from '@/users/helpers';
 import { UpdateResourceStatusDto } from './dto/update-resource-status.dto';
@@ -214,6 +214,22 @@ export class ResourcesService {
 				id: commentId
 			}
 		});
+	}
+
+	async findAllComments(page: number, limit: number, params: FindResourceCommentsParamDto) {
+		return await paginateComments(
+			this.prisma, 
+			{
+				where: {
+					resourceId: parseInt(params.id.toString())
+				},
+				orderBy: {
+					createdAt: 'desc'
+				}
+			}, 
+			page, 
+			limit
+		);
 	}
 
 }
