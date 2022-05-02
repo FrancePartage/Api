@@ -26,6 +26,7 @@ model User {
 	resources						Resource[] 	@relation(name: "resources")
 	avatar							String			@default("default.png")
 	comments						Comment[]		@relation(name: "a_comments")
+	favorites						Resource[]		@relation(name: "favorites")
 
 	createdAt 					DateTime 		@default(now())
 	updatedAt 					DateTime 		@default(now())
@@ -59,6 +60,7 @@ model Resource {
 	content							String					@db.Text()
 	tags								String[]
 	comments						Comment[]				@relation(name: "r_comments")
+	favoriteUsers				User[]					@relation(name: "favorites")
 
 	createdAt 					DateTime 				@default(now())
 	updatedAt 					DateTime 				@default(now())
