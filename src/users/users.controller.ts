@@ -6,9 +6,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from './users.service';
 import path = require('path');
 import { Avatar } from './types';
-import { GetRelationsOfUserDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
+import { GetFavoritesParamDto, GetRelationsOfUserDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 import { UserRole } from '@prisma/client';
-import { GetUsersQuery } from './queries';
+import { GetFavoritesQuery, GetUsersQuery } from './queries';
 
 export const storage = {
 	storage: diskStorage({
@@ -73,6 +73,12 @@ export class UsersController {
 	@Patch('informations')
 	async updateInformations(@GetCurrentUserId() userId: number, @Body() dto: UpdateInformationsDto) {
 		return this.usersService.updateInformations(userId, dto);
+	}
+
+	@Get(':userId/favorites')
+	@Public()
+	async findAllFavorites(@Param() params: GetFavoritesParamDto, @Query() queryParams: GetFavoritesQuery) {
+		return this.usersService.findAllFavorites(parseInt(params.userId), queryParams.page, queryParams.limit);
 	}
 
 }

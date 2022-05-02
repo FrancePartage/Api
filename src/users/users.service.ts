@@ -5,7 +5,7 @@ import { Avatar, ComputedUser } from './types';
 import fs = require('fs');
 import * as argon2 from 'argon2';
 import { UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
-import { paginateUsers } from '@/common/pagination/paginate';
+import { paginateResources, paginateUsers } from '@/common/pagination/paginate';
 
 @Injectable()
 export class UsersService {
@@ -171,6 +171,26 @@ export class UsersService {
 				}
 			}, 
 			page, 
+			limit
+		);
+	}
+
+	async findAllFavorites(userId: number, page: number, limit: number) {
+		return await paginateResources(
+			this.prisma,
+			{
+				where: {
+					favoriteUsers: {
+						some: {
+							id: userId
+						}
+					}
+				},
+				orderBy: {
+					createdAt: 'desc'
+				}
+			},
+			page,
 			limit
 		);
 	}

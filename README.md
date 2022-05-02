@@ -41,7 +41,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Récuperer une ressource
 - [x] Récuperer des ressources (Pagination)
 - [x] Mettre une ressource en favori
-- [ ] Récuperer la liste des ressources favorites
+- [x] Récuperer la liste des ressources favorites
 - [ ] Lors de la récuperation des ressources par une utilisateur connecté, ajouté une variable pour savoir si l'utilisateur à liké ou pas
 - [x] Ajouter une commentaire
 - [x] Supprimer un commentaire
