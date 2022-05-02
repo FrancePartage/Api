@@ -105,7 +105,7 @@ export class ResourcesController {
 
 	@Delete(':resourceId/comments/:id')
 	deleteComment(@GetCurrentUserId() userId: number, @Param() params: DeleteResourceCommentParamDto) {
-
+		return this.resourcesService.deleteComment(userId, params);
 	}
 
 }

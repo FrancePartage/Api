@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
+import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { paginateResources } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 import { computeUser } from '@/users/helpers';
@@ -182,6 +182,36 @@ export class ResourcesService {
 				authorId: userId,
 				resourceId: resourceId,
 				content: dto.content
+			}
+		});
+	}
+
+	async deleteComment(userId: number, params: DeleteResourceCommentParamDto) {
+		const resourceId: number = parseInt(params.resourceId.toString());
+		const resource = (await this.find(resourceId)).data;
+
+		if (!resource) {
+			throw new ForbiddenException("Ressource non trouvée");
+		}
+
+		const commentId: number = parseInt(params.id.toString());
+		const comment = await this.prisma.comment.findFirst({
+			where: {
+				id: commentId
+			}
+		});
+
+		if (!comment) {
+			throw new ForbiddenException("Commentaire non trouvé");
+		}
+
+		if (comment.authorId !== userId) {
+			throw new ForbiddenException("Vous n'êtes pas l'auteur de ce commentaire");
+		}
+
+		await this.prisma.comment.delete({
+			where: {
+				id: commentId
 			}
 		});
 	}
