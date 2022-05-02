@@ -99,12 +99,12 @@ export class ResourcesController {
 	}
 
 	@Post(':id/comments')
-	createComment(@GetCurrentUserId() userId, @Param() params: AddResourceCommentsParamDto, @Body() dto: AddResourceCommentsDto) {
-
+	createComment(@GetCurrentUserId() userId: number, @Param() params: AddResourceCommentsParamDto, @Body() dto: AddResourceCommentsDto) {
+		return this.resourcesService.createComment(userId, params, dto);
 	}
 
 	@Delete(':resourceId/comments/:id')
-	deleteComment(@GetCurrentUserId() userId, @Param() params: DeleteResourceCommentParamDto) {
+	deleteComment(@GetCurrentUserId() userId: number, @Param() params: DeleteResourceCommentParamDto) {
 
 	}
 

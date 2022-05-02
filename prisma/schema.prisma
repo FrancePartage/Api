@@ -74,9 +74,8 @@ model Comment {
 	resourceId					Int
 	resource						Resource				@relation(name: "r_comments", fields: [resourceId], references: [id])
 	content							String
-	parentId						Int?
-	parent							Comment?				@relation(name: "parent", fields: [parentId], references: [id])
-	childs							Comment[]				@relation(name: "parent")
+
+	createdAt 					DateTime 				@default(now())
 
 	@@map("comments")
 }

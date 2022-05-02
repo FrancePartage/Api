@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { CreateResourceDto, DeleteResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
+import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { paginateResources } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 import { computeUser } from '@/users/helpers';
@@ -167,6 +167,23 @@ export class ResourcesService {
 			page, 
 			limit
 		);
+	}
+
+	async createComment(userId: number, params: AddResourceCommentsParamDto, dto: AddResourceCommentsDto) {
+		const resourceId: number = parseInt(params.id.toString());
+		const resource = (await this.find(resourceId)).data;
+
+		if (!resource) {
+			throw new ForbiddenException("Ressource non trouvée");
+		}
+
+		return this.prisma.comment.create({
+			data: {
+				authorId: userId,
+				resourceId: resourceId,
+				content: dto.content
+			}
+		});
 	}
 
 }
