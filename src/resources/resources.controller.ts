@@ -5,7 +5,7 @@ import { ResourcesService } from './resources.service';
 import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
 import { GetCurrentUserId, Public, Roles } from '@/common/decorators';
-import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, GetResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
+import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, GetResourceDto, LikeResourceParamDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { GetCommentsQuery, GetResourcesQuery } from './queries';
 import { ResourceStatus, UserRole } from '@prisma/client';
 import { UpdateResourceStatusDto } from './dto/update-resource-status.dto';
@@ -107,6 +107,11 @@ export class ResourcesController {
 	@Delete(':resourceId/comments/:id')
 	deleteComment(@GetCurrentUserId() userId: number, @Param() params: DeleteResourceCommentParamDto) {
 		return this.resourcesService.deleteComment(userId, params);
+	}
+
+	@Post(':id/like')
+	likeResource(@GetCurrentUserId() userId: number, @Param() params: LikeResourceParamDto) {
+		return this.resourcesService.likeResource(userId, params);
 	}
 
 }

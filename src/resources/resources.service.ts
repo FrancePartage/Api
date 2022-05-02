@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
+import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, LikeResourceParamDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { paginateComments, paginateResources } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 import { computeUser } from '@/users/helpers';
@@ -230,6 +230,43 @@ export class ResourcesService {
 			page, 
 			limit
 		);
+	}
+
+	async likeResource(userId: number, params: LikeResourceParamDto) {
+		const resourceId: number = parseInt(params.id.toString());
+		const resource = (await this.find(resourceId)).data;
+
+		if (!resource) {
+			throw new ForbiddenException("Ressource non trouvée");
+		}
+
+		const favoritedResource = await this.prisma.resource.findFirst({
+			where: {
+				id: resourceId,
+				favoriteUsers: {
+					some: {
+						id: userId
+					}
+				}
+			}
+		});
+
+		if (favoritedResource) {
+			throw new ForbiddenException("Vous avez déjà liké cette ressource");
+		}
+
+		await this.prisma.resource.update({
+			where: {
+				id: resourceId
+			},
+			data: {
+				favoriteUsers: {
+					connect: {
+						id: userId
+					}
+				}
+			}
+		});
 	}
 
 }

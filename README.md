@@ -40,8 +40,9 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Modifier une ressource
 - [x] Récuperer une ressource
 - [x] Récuperer des ressources (Pagination)
-- [ ] Mettre en favori
+- [x] Mettre une ressource en favori
 - [ ] Récuperer la liste des ressources favorites
+- [ ] Lors de la récuperation des ressources par une utilisateur connecté, ajouté une variable pour savoir si l'utilisateur à liké ou pas
 - [x] Ajouter une commentaire
 - [x] Supprimer un commentaire
 - [x] Lister les commentaires d'une ressource
