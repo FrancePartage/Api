@@ -269,4 +269,41 @@ export class ResourcesService {
 		});
 	}
 
+	async dislikeResource(userId: number, params: LikeResourceParamDto) {
+		const resourceId: number = parseInt(params.id.toString());
+		const resource = (await this.find(resourceId)).data;
+
+		if (!resource) {
+			throw new ForbiddenException("Ressource non trouvée");
+		}
+
+		const favoritedResource = await this.prisma.resource.findFirst({
+			where: {
+				id: resourceId,
+				favoriteUsers: {
+					some: {
+						id: userId
+					}
+				}
+			}
+		});
+
+		if (!favoritedResource) {
+			throw new ForbiddenException("Vous n'avez pas liké cette ressource");
+		}
+
+		await this.prisma.resource.update({
+			where: {
+				id: resourceId
+			},
+			data: {
+				favoriteUsers: {
+					disconnect: {
+						id: userId
+					}
+				}
+			}
+		});
+	}
+
 }

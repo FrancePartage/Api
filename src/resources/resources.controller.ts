@@ -43,7 +43,8 @@ export class ResourcesController {
 
 	@Get('/')
 	@Public()
-	async findAll(@Query() queryParams: GetResourcesQuery) {
+	async findAll(@GetCurrentUserId() userId: number, @Query() queryParams: GetResourcesQuery) {
+		console.log(userId)
 		return this.resourcesService.findAll(queryParams.page, queryParams.limit);
 	}
 
@@ -112,6 +113,11 @@ export class ResourcesController {
 	@Post(':id/like')
 	likeResource(@GetCurrentUserId() userId: number, @Param() params: LikeResourceParamDto) {
 		return this.resourcesService.likeResource(userId, params);
+	}
+
+	@Delete(':id/like')
+	dislikeResource(@GetCurrentUserId() userId: number, @Param() params: LikeResourceParamDto) {
+		return this.resourcesService.dislikeResource(userId, params);
 	}
 
 }
