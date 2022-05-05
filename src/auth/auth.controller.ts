@@ -33,6 +33,7 @@ export class AuthController {
 	}
 
 	@Post('refresh')
+	@Public()
 	@UseGuards(RtGuard)
 	@HttpCode(HttpStatus.OK)
 	refreshTokens(
