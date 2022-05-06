@@ -11,6 +11,7 @@ export function computeUser(user: User): ComputedUser {
 		}
 	
 		return {
+			id: user.id,
 			displayName: displayName,
 			role: user.role,
 			avatar: user.avatar
