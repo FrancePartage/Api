@@ -208,7 +208,7 @@ export class RelationsService {
 		});
 
 		return {
-			data: relations
+			data: computeAllUsers(relations)
 		}
 	}
 
