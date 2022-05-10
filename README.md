@@ -32,6 +32,8 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Récuperer l'avatar d'un utilisateur
 - [x] Récuperer les utilisateurs (Modérateur, Pagination, Recherche)
 - [x] Changer le role d'un utilisateur (Admin)
+- [ ] Nombre de ressources dans l'utilisateur
+- [ ] Nombre de relations dans l'utilisateur
 
 ### Ressources
 

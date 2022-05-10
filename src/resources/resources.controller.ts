@@ -43,8 +43,7 @@ export class ResourcesController {
 
 	@Get('/')
 	@Public()
-	async findAll(@GetCurrentUserId() userId: number, @Query() queryParams: GetResourcesQuery) {
-		console.log(userId)
+	async findAll(@Query() queryParams: GetResourcesQuery) {
 		return this.resourcesService.findAll(queryParams.page, queryParams.limit);
 	}
 
