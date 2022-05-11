@@ -27,7 +27,31 @@ export const storage = {
 
 		const fileSize = parseInt(req.headers['content-length']);
 		if (fileSize > 512000) {
-			return callback(new ForbiddenException('L\'image est trop volumineuse (maximum 500ko)'), false);
+			return callback(new ForbiddenException('L\'image de couverture est trop volumineuse (max 512ko)'), false);
+		}
+
+		callback(null, true);
+	}
+}
+
+export const storageImage = {
+	storage: diskStorage({
+		destination: './uploads/resources',		
+		filename: (req, file, cb) => {
+			const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
+			const extension: string = path.parse(file.originalname).ext;
+
+			cb(null, `${filename}${extension}`);
+		}
+	}),
+	fileFilter: (req, file, callback) => {
+		if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+			return callback(new ForbiddenException('Seulement les images sont autorisées'), false);
+		}
+
+		const fileSize = parseInt(req.headers['content-length']);
+		if (fileSize > 512000) {
+			return callback(new ForbiddenException('L\'image de couverture est trop volumineuse (max 512ko)'), false);
 		}
 
 		callback(null, true);
@@ -51,6 +75,12 @@ export class ResourcesController {
 	@UseInterceptors(FileInterceptor('coverFile', storage))
 	async create(@GetCurrentUserId() userId: number, @UploadedFile() coverFile: any, @Body() dto: CreateResourceDto) {
 		return await this.resourcesService.create(userId, coverFile, dto);
+	}
+
+	@Post('/image')
+	@UseInterceptors(FileInterceptor('image', storageImage))
+	async uploadImage(@UploadedFile() file: any) {
+		return { file: file.filename };
 	}
 
 	@Get(':id')
