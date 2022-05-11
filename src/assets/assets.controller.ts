@@ -22,4 +22,10 @@ export class AssetsController {
 		return this.assetsService.findCover(imageName, res);
 	}
 
+	@Get('resources/:imageName')
+	@Public()
+	findResources(@Param('imageName') imageName: string, @Res() res): Observable<Object> {
+		return this.assetsService.findResource(imageName, res);
+	}
+
 }
