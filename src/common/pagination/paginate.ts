@@ -21,6 +21,7 @@ export const paginateResources = async (prisma: PrismaService, options: any, pag
 		...options,
 		select: {
 			id: true,
+			title: true,
 			authorId: true,
 			status: true,
 			cover: true,
