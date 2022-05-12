@@ -83,23 +83,23 @@ export class ResourcesController {
 		return { file: file.filename };
 	}
 
-	@Get(':id')
+	@Get('first/:id')
 	@Public()
 	async find(@Param() params: GetResourceDto) {
 		return await this.resourcesService.find(parseInt(params.id.toString()));
 	}
 
-	@Delete(':id')
+	@Delete('first/:id')
 	async delete(@GetCurrentUserId() userId: number, @Param() params: DeleteResourceDto) {
 		return await this.resourcesService.delete(userId, params);
 	}
 
-	@Patch(':id')
+	@Patch('first/:id')
 	async updateOne(@GetCurrentUserId() userId: number, @Param() params: UpdateResourceParamDto, @Body() dto: UpdateResourceDto) {
 		return await this.resourcesService.update(userId, params, dto);
 	}
 
-	@Patch(':id/status')
+	@Patch('first/:id/status')
 	@Roles(UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN)
 	async updateStatus(@Param() params : UpdateResourceStatusParamDto, @Body() dto: UpdateResourceStatusDto) {
 		return await this.resourcesService.updateStatus(params, dto);
@@ -123,13 +123,13 @@ export class ResourcesController {
 		return this.resourcesService.findByTag(tag, queryParams.page, queryParams.limit);
 	}
 
-	@Get(':id/comments')
+	@Get('first/:id/comments')
 	@Public()
 	findAllComments(@Query() queryParams: GetCommentsQuery, @Param() params: FindResourceCommentsParamDto) {
 		return this.resourcesService.findAllComments(queryParams.page, queryParams.limit, params);
 	}
 
-	@Post(':id/comments')
+	@Post('first/:id/comments')
 	createComment(@GetCurrentUserId() userId: number, @Param() params: AddResourceCommentsParamDto, @Body() dto: AddResourceCommentsDto) {
 		return this.resourcesService.createComment(userId, params, dto);
 	}
@@ -139,12 +139,12 @@ export class ResourcesController {
 		return this.resourcesService.deleteComment(userId, params);
 	}
 
-	@Post(':id/like')
+	@Post('first/:id/like')
 	likeResource(@GetCurrentUserId() userId: number, @Param() params: LikeResourceParamDto) {
 		return this.resourcesService.likeResource(userId, params);
 	}
 
-	@Delete(':id/like')
+	@Delete('first/:id/like')
 	dislikeResource(@GetCurrentUserId() userId: number, @Param() params: LikeResourceParamDto) {
 		return this.resourcesService.dislikeResource(userId, params);
 	}
