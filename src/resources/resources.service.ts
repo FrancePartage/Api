@@ -177,7 +177,7 @@ export class ResourcesService {
 			throw new ForbiddenException("Ressource non trouvée");
 		}
 
-		return this.prisma.comment.create({
+		const comment = await this.prisma.comment.create({
 			data: {
 				authorId: userId,
 				resourceId: resourceId,
@@ -187,6 +187,11 @@ export class ResourcesService {
 				author: true
 			}
 		});
+
+		return {
+			...comment,
+			author: computeUser(comment.author)
+		};
 	}
 
 	async deleteComment(userId: number, params: DeleteResourceCommentParamDto) {
