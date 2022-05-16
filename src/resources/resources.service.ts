@@ -182,6 +182,9 @@ export class ResourcesService {
 				authorId: userId,
 				resourceId: resourceId,
 				content: dto.content
+			},
+			include: {
+				author: true
 			}
 		});
 	}
