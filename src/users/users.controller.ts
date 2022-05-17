@@ -9,6 +9,7 @@ import { Avatar } from './types';
 import { GetFavoritesParamDto, GetRelationsOfUserDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 import { UserRole } from '@prisma/client';
 import { GetFavoritesQuery, GetUsersQuery } from './queries';
+import { GetUserInformations } from './dto/get-user-informations.dto';
 
 export const storage = {
 	storage: diskStorage({
@@ -51,6 +52,12 @@ export class UsersController {
 	@UseInterceptors(FileInterceptor('file', storage))
 	uploadAvatar(@GetCurrentUserId() userId: number, @GetCurrentUser('avatar') currentAvatar: String, @UploadedFile() file: any): Promise<Avatar> {
 		return this.usersService.uploadAvatar(userId, currentAvatar, file);
+	}
+
+	@Get(':userId')
+	@Public()
+	async getUserInformation(@Param() params: GetUserInformations) {
+		return this.usersService.findOne(parseInt(params.userId));
 	}
 
 	@Get(':userId/relations')
