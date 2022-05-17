@@ -10,6 +10,8 @@ import { GetFavoritesParamDto, GetRelationsOfUserDto, UpdateInformationsDto, Upd
 import { UserRole } from '@prisma/client';
 import { GetFavoritesQuery, GetUsersQuery } from './queries';
 import { GetUserInformations } from './dto/get-user-informations.dto';
+import { GetResourcesOfUserDto } from './dto/get-resources-of-user.dto';
+import { GetUsersResourcesQuery } from './queries/get-users-resources.query';
 
 export const storage = {
 	storage: diskStorage({
@@ -64,6 +66,12 @@ export class UsersController {
 	@Public()
 	async getRelations(@Param() params: GetRelationsOfUserDto) {
 		return this.usersService.findAllRelations(parseInt(params.userId));
+	}
+
+	@Get(':userId/resources')
+	@Public()
+	async getResources(@Param() params: GetResourcesOfUserDto, @Query() query: GetUsersResourcesQuery) {
+		return this.usersService.findAllResources(parseInt(params.userId), query.page, query.limit);
 	}
 
 	@Patch(':userId/role')

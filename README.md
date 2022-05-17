@@ -55,7 +55,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Tags populaires
 - [x] Récuperation des ressources par tag
 - [x] Récuperer la couverture d'une ressource
-- [ ] Récuperer les ressources d'un utilisateur
+- [x] Récuperer les ressources d'un utilisateur
 
 ### Relations
 

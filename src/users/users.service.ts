@@ -6,6 +6,7 @@ import fs = require('fs');
 import * as argon2 from 'argon2';
 import { UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 import { paginateResources, paginateUsers } from '@/common/pagination/paginate';
+import { ResourceStatus } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -74,6 +75,23 @@ export class UsersService {
 		return {
 			data: computedRelations
 		};
+	}
+
+	async findAllResources(userId: number, page: number, limit: number) {
+		return await paginateResources(
+			this.prisma, 
+			{
+				where: {
+					status: ResourceStatus.APPROVED,
+					authorId: userId
+				},
+				orderBy: {
+					createdAt: 'desc'
+				}
+			}, 
+			page, 
+			limit
+		);
 	}
 
 	async udpdateRole(currentUserId: number, params: UpdateUserRoleParamDto, dto: UpdateUserRoleDto) {
