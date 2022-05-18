@@ -1,11 +1,11 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { computeAllUsers, computeUser } from './helpers';
+import { computeUser } from './helpers';
 import { Avatar, ComputedUser } from './types';
 import fs = require('fs');
 import * as argon2 from 'argon2';
 import { UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
-import { paginateResources, paginateUsers } from '@/common/pagination/paginate';
+import { paginateRelations, paginateResources, paginateUsers } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 
 @Injectable()
@@ -48,33 +48,22 @@ export class UsersService {
 		};
 	}
 
-	async findAllRelations(userId: number) {
-		const relations = await this.prisma.relation.findMany({
-			where: {
-				participants: {
-					some: {
-						id: userId
-					}
-				},
-				isAccepted: true
+	async findAllRelations(userId: number, page: number, limit: number) {
+		return await paginateRelations(
+			this.prisma,
+			{
+				where: {
+					participants: {
+						some: {
+							id: userId
+						}
+					},
+					isAccepted: true
+				}
 			},
-			include: {
-				participants: true
-			}
-		});
-		
-		const computedRelations = [];
-
-		relations.map(relation => { 
-			computedRelations.push({
-				...relation,
-				participants: computeAllUsers(relation.participants)
-			});
-		});
-
-		return {
-			data: computedRelations
-		};
+			page,
+			limit
+		);
 	}
 
 	async findAllResources(userId: number, page: number, limit: number) {

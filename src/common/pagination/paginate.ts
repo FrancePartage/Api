@@ -1,5 +1,5 @@
 import { PrismaService } from "@/prisma/prisma.service"
-import { computeUser } from "@/users/helpers";
+import { computeAllUsers, computeUser } from "@/users/helpers";
 import { PaginationData } from "./types"
 
 export const paginateResources = async (prisma: PrismaService, options: any, page: number = 1, limit: number = 10): Promise<PaginationData> => {
@@ -137,6 +137,50 @@ export const paginateComments = async (prisma: PrismaService, options: any, page
 			hasNextPage: page < pageCount,
 			hasPreviousPage: page > 1,
 			itemsCount: commentsCount
+		}
+	}
+}
+
+export const paginateRelations = async (prisma: PrismaService, options: any, page: number = 1, limit: number = 10): Promise<PaginationData> => {
+	if (limit > 100) limit = 100;
+
+	const relationsCount: number = await prisma.relation.count({ ...options });
+	const pageCount: number = Math.ceil(relationsCount / limit);
+
+	if (page > pageCount) page = pageCount;
+	if (page <= 0) page = 1;
+
+	const paginationOptions = {
+		take: limit,
+		skip: (page - 1) * limit
+	};
+
+	const relations = await prisma.relation.findMany({
+		...paginationOptions,
+		...options,
+		include: {
+			participants: true
+		}
+	});
+
+	const computedRelations = [];
+
+	relations.map((relation: any) => { 
+		computedRelations.push({
+			...relation,
+			participants: computeAllUsers(relation.participants)
+		});
+	});
+
+	return {
+		data: computedRelations,
+		pagination: {
+			currentPage: parseInt(page.toString()),
+			limit: parseInt(limit.toString()),
+			pageCount: pageCount,
+			hasNextPage: page < pageCount,
+			hasPreviousPage: page > 1,
+			itemsCount: relationsCount
 		}
 	}
 }

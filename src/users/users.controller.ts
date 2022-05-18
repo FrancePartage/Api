@@ -8,10 +8,9 @@ import path = require('path');
 import { Avatar } from './types';
 import { GetFavoritesParamDto, GetRelationsOfUserDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 import { UserRole } from '@prisma/client';
-import { GetFavoritesQuery, GetUsersQuery } from './queries';
+import { GetFavoritesQuery, GetUserRelationsQuery, GetUserResourcesQuery, GetUsersQuery } from './queries';
 import { GetUserInformations } from './dto/get-user-informations.dto';
 import { GetResourcesOfUserDto } from './dto/get-resources-of-user.dto';
-import { GetUsersResourcesQuery } from './queries/get-users-resources.query';
 
 export const storage = {
 	storage: diskStorage({
@@ -64,13 +63,13 @@ export class UsersController {
 
 	@Get(':userId/relations')
 	@Public()
-	async getRelations(@Param() params: GetRelationsOfUserDto) {
-		return this.usersService.findAllRelations(parseInt(params.userId));
+	async getRelations(@Param() params: GetRelationsOfUserDto, @Query() query: GetUserRelationsQuery) {
+		return this.usersService.findAllRelations(parseInt(params.userId), query.page, query.limit);
 	}
 
 	@Get(':userId/resources')
 	@Public()
-	async getResources(@Param() params: GetResourcesOfUserDto, @Query() query: GetUsersResourcesQuery) {
+	async getResources(@Param() params: GetResourcesOfUserDto, @Query() query: GetUserResourcesQuery) {
 		return this.usersService.findAllResources(parseInt(params.userId), query.page, query.limit);
 	}
 
