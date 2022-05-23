@@ -5,4 +5,6 @@ export type ComputedUser = {
 	displayName: string;
 	role: UserRole;
 	avatar: String;
+	resourcesCount: number;
+	relationsCount: number;
 }

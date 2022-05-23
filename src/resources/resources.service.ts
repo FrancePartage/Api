@@ -23,7 +23,7 @@ export class ResourcesService {
 			}
 		});
 
-		if (resource) resource.author = computeUser(resource.author);
+		if (resource) resource.author = await computeUser(this.prisma, resource.author);
 
 		return {
 			data: resource
@@ -190,7 +190,7 @@ export class ResourcesService {
 
 		return {
 			...comment,
-			author: computeUser(comment.author)
+			author: await computeUser(this.prisma, comment.author)
 		};
 	}
 

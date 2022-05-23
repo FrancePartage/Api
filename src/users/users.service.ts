@@ -24,7 +24,7 @@ export class UsersService {
 
 		if (!user) throw new Error("User not found");
 
-		return computeUser(user);
+		return await computeUser(this.prisma, user);
 	}
 
 	async uploadAvatar(userId: number, currentAvatar: String, file: any): Promise<Avatar> {

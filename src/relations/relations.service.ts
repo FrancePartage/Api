@@ -208,7 +208,7 @@ export class RelationsService {
 		});
 
 		return {
-			data: computeAllUsers(relations)
+			data: await computeAllUsers(this.prisma, relations)
 		}
 	}
 

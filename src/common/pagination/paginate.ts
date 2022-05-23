@@ -34,12 +34,12 @@ export const paginateResources = async (prisma: PrismaService, options: any, pag
 
 	const computedResources = [];
 
-	resources.map((resource: any) => {
+	await Promise.all(resources.map(async (resource: any) => {
 		computedResources.push({
 			...resource,
-			author: computeUser(resource.author)
+			author: await computeUser(prisma, resource.author)
 		});
-	});
+	}));
 
 	return {
 		data: computedResources,
@@ -121,12 +121,12 @@ export const paginateComments = async (prisma: PrismaService, options: any, page
 
 	const computedComments = [];
 
-	comments.map((comment: any) => {
+	await Promise.all(comments.map(async (comment: any) => {
 		computedComments.push({
 			...comment,
-			author: computeUser(comment.author)
+			author: await computeUser(prisma, comment.author)
 		});
-	});
+	}));
 
 	return {
 		data: computedComments,
@@ -165,12 +165,12 @@ export const paginateRelations = async (prisma: PrismaService, options: any, pag
 
 	const computedRelations = [];
 
-	relations.map((relation: any) => { 
+	await Promise.all(relations.map(async (relation: any) => { 
 		computedRelations.push({
 			...relation,
-			participants: computeAllUsers(relation.participants)
+			participants: await computeAllUsers(prisma, relation.participants)
 		});
-	});
+	}));
 
 	return {
 		data: computedRelations,
