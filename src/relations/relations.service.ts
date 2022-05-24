@@ -105,11 +105,23 @@ export class RelationsService {
 					id: userId
 				},
 				isAccepted: false
+			},
+			include: {
+				participants: true
 			}
 		});
 
+		const computedRelations = [];
+
+		await Promise.all(relations.map(async (relation) => {
+			computedRelations.push({
+				...relation,
+				participants: await computeAllUsers(this.prisma, relation.participants)
+			});
+		}));
+
 		return {
-			data: relations
+			data: computedRelations
 		};
 	}
 
