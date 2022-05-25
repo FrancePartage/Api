@@ -28,13 +28,23 @@ export async function computeUser(prisma: PrismaService, user: User): Promise<Co
 				}
 		});
 
+		const requestsCount = await prisma.relation.count({
+				where: {
+					requestTo: {
+						id: user.id
+					},
+					isAccepted: false
+				}
+		});
+
 		return {
 			id: user.id,
 			displayName: displayName,
 			role: user.role,
 			avatar: user.avatar,
 			resourcesCount: resourcesCount,
-			relationsCount: relationsCount
+			relationsCount: relationsCount,
+			requestsCount: requestsCount
 		}
 }
 

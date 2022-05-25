@@ -7,4 +7,5 @@ export type ComputedUser = {
 	avatar: String;
 	resourcesCount: number;
 	relationsCount: number;
+	requestsCount: number;
 }
