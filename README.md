@@ -16,6 +16,10 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 
 ## Todo
 
+### Général
+
+- [ ] Traduire les messages d'erreur
+
 ### Authentification
 
 - [x] Inscription

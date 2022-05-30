@@ -95,7 +95,15 @@ export class AuthService {
 
 		if (!user) throw new ForbiddenException("Accès refusé");
 
-		return await computeUser(this.prisma, user);
+		const computedUser = await computeUser(this.prisma, user);
+
+		return {
+			...computedUser,
+			username: user.username,
+			firstname: user.firstname,
+			lastname: user.lastname,
+			email: user.email,
+		};
 	}
 
 	async updateRtHash(userId: number, rt: string) {
