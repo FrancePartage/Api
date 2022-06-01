@@ -1,10 +1,10 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { computeUser } from './helpers';
+import { computeAllUsers, computeUser } from './helpers';
 import { Avatar, ComputedUser } from './types';
 import fs = require('fs');
 import * as argon2 from 'argon2';
-import { UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
+import { SearchUserDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 import { paginateRelations, paginateResources, paginateUsers } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 
@@ -25,6 +25,37 @@ export class UsersService {
 		if (!user) throw new Error("User not found");
 
 		return await computeUser(this.prisma, user);
+	}
+
+	async searchAll(dto: SearchUserDto) {
+		const users = await this.prisma.user.findMany({
+			where: {
+				OR: [
+					{
+						username: {
+							contains: dto.query
+						}
+					},
+					{
+						firstname: {
+							contains: dto.query
+						}
+					},
+					{
+						lastname: {
+							contains: dto.query
+						}
+					}
+				]
+			},
+			take: 10
+		});
+
+		const computedUsers = await computeAllUsers(this.prisma, users);
+
+		return {
+			data: computedUsers
+		};
 	}
 
 	async uploadAvatar(userId: number, currentAvatar: String, file: any): Promise<Avatar> {

@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, LikeResourceParamDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
+import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, LikeResourceParamDto, SearchResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { paginateComments, paginateResources } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 import { computeUser } from '@/users/helpers';
@@ -27,6 +27,54 @@ export class ResourcesService {
 
 		return {
 			data: resource
+		};
+	}
+
+	async searchAll(dto: SearchResourceDto) {
+		const resources = await this.prisma.resource.findMany({
+			where: {
+				OR: [
+					{
+						title: {
+							contains: dto.query
+						}
+					},
+					{
+						tags: {
+							has: dto.query
+						}
+					}
+				],
+				status: ResourceStatus.APPROVED
+			},
+			select: {
+				id: true,
+				title: true,
+				authorId: true,
+				status: true,
+				cover: true,
+				tags: true,
+				createdAt: true,
+				updatedAt: true,
+				author: true
+			},
+			orderBy: {
+				createdAt: 'desc'
+			},
+			take: 10
+		});
+
+		const computedResources = [];
+
+		await Promise.all(resources.map(async (resource) => {
+			computedResources.push({
+				...resource,
+				author: await computeUser(this.prisma, resource.author)
+			});
+		}));
+
+		return {
+			data: computedResources
 		};
 	}
 

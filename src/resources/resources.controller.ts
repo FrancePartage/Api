@@ -5,7 +5,7 @@ import { ResourcesService } from './resources.service';
 import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
 import { GetCurrentUserId, Public, Roles } from '@/common/decorators';
-import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, GetResourceDto, LikeResourceParamDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
+import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, GetResourceDto, LikeResourceParamDto, SearchResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { GetCommentsQuery, GetResourcesQuery } from './queries';
 import { ResourceStatus, UserRole } from '@prisma/client';
 import { UpdateResourceStatusDto } from './dto/update-resource-status.dto';
@@ -69,6 +69,12 @@ export class ResourcesController {
 	@Public()
 	async findAll(@Query() queryParams: GetResourcesQuery) {
 		return this.resourcesService.findAll(queryParams.page, queryParams.limit);
+	}
+
+	@Get('search')
+	@Public()
+	async searchAll(@Body() dto: SearchResourceDto) {
+		return this.resourcesService.searchAll(dto);
 	}
 
 	@Post('/')
