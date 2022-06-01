@@ -4,7 +4,7 @@ import { computeAllUsers, computeUser } from './helpers';
 import { Avatar, ComputedUser } from './types';
 import fs = require('fs');
 import * as argon2 from 'argon2';
-import { SearchUserDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
+import { SearchUserParamDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 import { paginateRelations, paginateResources, paginateUsers } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 
@@ -27,23 +27,23 @@ export class UsersService {
 		return await computeUser(this.prisma, user);
 	}
 
-	async searchAll(dto: SearchUserDto) {
+	async searchAll(params: SearchUserParamDto) {
 		const users = await this.prisma.user.findMany({
 			where: {
 				OR: [
 					{
 						username: {
-							contains: dto.query
+							contains: params.query
 						}
 					},
 					{
 						firstname: {
-							contains: dto.query
+							contains: params.query
 						}
 					},
 					{
 						lastname: {
-							contains: dto.query
+							contains: params.query
 						}
 					}
 				]

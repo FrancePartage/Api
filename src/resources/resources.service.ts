@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, LikeResourceParamDto, SearchResourceDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
+import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, LikeResourceParamDto, SearchResourceParamDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { paginateComments, paginateResources } from '@/common/pagination/paginate';
 import { ResourceStatus } from '@prisma/client';
 import { computeUser } from '@/users/helpers';
@@ -30,18 +30,18 @@ export class ResourcesService {
 		};
 	}
 
-	async searchAll(dto: SearchResourceDto) {
+	async searchAll(params: SearchResourceParamDto) {
 		const resources = await this.prisma.resource.findMany({
 			where: {
 				OR: [
 					{
 						title: {
-							contains: dto.query
+							contains: params.query
 						}
 					},
 					{
 						tags: {
-							has: dto.query
+							has: params.query
 						}
 					}
 				],

@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from './users.service';
 import path = require('path');
 import { Avatar } from './types';
-import { GetFavoritesParamDto, GetRelationsOfUserDto, SearchUserDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
+import { GetFavoritesParamDto, GetRelationsOfUserDto, SearchUserParamDto, UpdateInformationsDto, UpdatePasswordDto, UpdateUserRoleDto, UpdateUserRoleParamDto } from './dto';
 import { UserRole } from '@prisma/client';
 import { GetFavoritesQuery, GetUserRelationsQuery, GetUserResourcesQuery, GetUsersQuery } from './queries';
 import { GetUserInformations } from './dto/get-user-informations.dto';
@@ -49,10 +49,10 @@ export class UsersController {
 		return this.usersService.findAll(queryParams.page, queryParams.limit, queryParams.search);
 	}
 
-	@Get('search')
+	@Get('search/:query')
 	@Public()
-	searchAll(@Body() dto: SearchUserDto) {
-		return this.usersService.searchAll(dto);
+	searchAll(@Param() params: SearchUserParamDto) {
+		return this.usersService.searchAll(params);
 	}
 
 	@Post('avatar')

@@ -10,4 +10,4 @@ export * from './add-resource-comments-param.dto';
 export * from './add-resource-comments.dto';
 export * from './delete-resource-comment-param.dto';
 export * from './like-resource-param.dto';
-export * from './search-resource.dto';
+export * from './search-resource-param.dto';
