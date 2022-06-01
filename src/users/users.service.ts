@@ -33,17 +33,20 @@ export class UsersService {
 				OR: [
 					{
 						username: {
-							contains: params.query
+							contains: params.query,
+							mode: 'insensitive'
 						}
 					},
 					{
 						firstname: {
-							contains: params.query
+							contains: params.query,
+							mode: 'insensitive'
 						}
 					},
 					{
 						lastname: {
-							contains: params.query
+							contains: params.query,
+							mode: 'insensitive'
 						}
 					}
 				]

@@ -36,7 +36,8 @@ export class ResourcesService {
 				OR: [
 					{
 						title: {
-							contains: params.query
+							contains: params.query,
+							mode: 'insensitive'
 						}
 					},
 					{
