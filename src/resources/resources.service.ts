@@ -79,8 +79,8 @@ export class ResourcesService {
 		};
 	}
 
-	async findAll(page: number, limit: number, status: ResourceStatus = ResourceStatus.APPROVED) {
-		return await paginateResources(
+	async findAll(userId: number, page: number, limit: number, status: ResourceStatus = ResourceStatus.APPROVED) {
+		const resources = await paginateResources(
 			this.prisma, 
 			{
 				where: {
@@ -93,6 +93,35 @@ export class ResourcesService {
 			page, 
 			limit
 		);
+
+		if (userId !== -1) {
+			const computedResources = [];
+
+			await Promise.all(resources.data.map(async (resource) => {
+				const like = await this.prisma.resource.count({
+					where: {
+						id: resource.id,
+						favoriteUsers: {
+							some: {
+								id: userId
+							}
+						}
+					}
+				});
+
+				computedResources.push({
+					...resource,
+					liked: like > 0
+				});
+			}));
+
+			return {
+				...resources,
+				data: computedResources
+			}
+		}
+
+		return resources;
 	}
 
 	async create(userId: number, coverFile: any, dto: CreateResourceDto) {

@@ -4,7 +4,7 @@ import { diskStorage } from 'multer';
 import { ResourcesService } from './resources.service';
 import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
-import { GetCurrentUserId, Public, Roles } from '@/common/decorators';
+import { GetCurrentUser, GetCurrentUserId, Public, Roles } from '@/common/decorators';
 import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, GetResourceDto, LikeResourceParamDto, SearchResourceParamDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { GetCommentsQuery, GetResourcesQuery } from './queries';
 import { ResourceStatus, UserRole } from '@prisma/client';
@@ -68,7 +68,12 @@ export class ResourcesController {
 	@Get('/')
 	@Public()
 	async findAll(@Query() queryParams: GetResourcesQuery) {
-		return this.resourcesService.findAll(queryParams.page, queryParams.limit);
+		return this.resourcesService.findAll(-1, queryParams.page, queryParams.limit);
+	}
+
+	@Get('/authentificated')
+	async findAllAuthentificated(@GetCurrentUserId() userId, @Query() queryParams: GetResourcesQuery) {
+		return this.resourcesService.findAll(userId, queryParams.page, queryParams.limit);
 	}
 
 	@Get('search/:query')
@@ -114,7 +119,7 @@ export class ResourcesController {
 	@Get('pendings')
 	@Roles(UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN)
 	async findAllPendings(@Query() queryParams: GetResourcesQuery) {
-		return this.resourcesService.findAll(queryParams.page, queryParams.limit, ResourceStatus.PENDING);
+		return this.resourcesService.findAll(-1, queryParams.page, queryParams.limit, ResourceStatus.PENDING);
 	}
 
 	@Get('tags')
