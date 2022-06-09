@@ -1,4 +1,4 @@
-import { GetCurrentUser, GetCurrentUserId, Public, Roles } from '@/common/decorators';
+import { GetCurrentUser, GetCurrentUserId, MaybeAuthentificated, Public, Roles } from '@/common/decorators';
 import { Body, Controller, ForbiddenException, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -74,9 +74,9 @@ export class UsersController {
 	}
 
 	@Get(':userId/resources')
-	@Public()
-	async getResources(@Param() params: GetResourcesOfUserDto, @Query() query: GetUserResourcesQuery) {
-		return this.usersService.findAllResources(parseInt(params.userId), query.page, query.limit);
+	@MaybeAuthentificated()
+	async getResources(@GetCurrentUser() user, @Param() params: GetResourcesOfUserDto, @Query() query: GetUserResourcesQuery) {
+		return this.usersService.findAllResources(user, parseInt(params.userId), query.page, query.limit);
 	}
 
 	@Patch(':userId/role')
@@ -97,8 +97,8 @@ export class UsersController {
 
 	@Get(':userId/favorites')
 	@Public()
-	async findAllFavorites(@Param() params: GetFavoritesParamDto, @Query() queryParams: GetFavoritesQuery) {
-		return this.usersService.findAllFavorites(parseInt(params.userId), queryParams.page, queryParams.limit);
+	async findAllFavorites(@GetCurrentUser() user, @Param() params: GetFavoritesParamDto, @Query() queryParams: GetFavoritesQuery) {
+		return this.usersService.findAllFavorites(user, parseInt(params.userId), queryParams.page, queryParams.limit);
 	}
 
 }

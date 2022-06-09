@@ -4,11 +4,12 @@ import { diskStorage } from 'multer';
 import { ResourcesService } from './resources.service';
 import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
-import { GetCurrentUser, GetCurrentUserId, Public, Roles } from '@/common/decorators';
+import { GetCurrentUser, GetCurrentUserId, MaybeAuthentificated, Public, Roles } from '@/common/decorators';
 import { AddResourceCommentsDto, AddResourceCommentsParamDto, CreateResourceDto, DeleteResourceCommentParamDto, DeleteResourceDto, FindResourceCommentsParamDto, GetResourceDto, LikeResourceParamDto, SearchResourceParamDto, UpdateResourceDto, UpdateResourceParamDto, UpdateResourceStatusParamDto } from './dto';
 import { GetCommentsQuery, GetResourcesQuery } from './queries';
 import { ResourceStatus, UserRole } from '@prisma/client';
 import { UpdateResourceStatusDto } from './dto/update-resource-status.dto';
+import { userInfo } from 'os';
 
 export const storage = {
 	storage: diskStorage({
@@ -66,14 +67,9 @@ export class ResourcesController {
 	) {}
 
 	@Get('/')
-	@Public()
-	async findAll(@Query() queryParams: GetResourcesQuery) {
-		return this.resourcesService.findAll(-1, queryParams.page, queryParams.limit);
-	}
-
-	@Get('/authentificated')
-	async findAllAuthentificated(@GetCurrentUserId() userId, @Query() queryParams: GetResourcesQuery) {
-		return this.resourcesService.findAll(userId, queryParams.page, queryParams.limit);
+	@MaybeAuthentificated()
+	async findAll(@GetCurrentUser() user, @Query() queryParams: GetResourcesQuery) {
+		return this.resourcesService.findAll(user, queryParams.page, queryParams.limit);
 	}
 
 	@Get('search/:query')
@@ -129,9 +125,9 @@ export class ResourcesController {
 	}
 
 	@Get('tags/:tag')
-	@Public()
-	findByTag(@Param('tag') tag: string, @Query() queryParams: GetResourcesQuery) {
-		return this.resourcesService.findByTag(tag, queryParams.page, queryParams.limit);
+	@MaybeAuthentificated()
+	findByTag(@GetCurrentUser() user, @Param('tag') tag: string, @Query() queryParams: GetResourcesQuery) {
+		return this.resourcesService.findByTag(user, tag, queryParams.page, queryParams.limit);
 	}
 
 	@Get('first/:id/comments')

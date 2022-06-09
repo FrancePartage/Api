@@ -2,7 +2,7 @@ import { PrismaService } from "@/prisma/prisma.service"
 import { computeAllUsers, computeUser } from "@/users/helpers";
 import { PaginationData } from "./types"
 
-export const paginateResources = async (prisma: PrismaService, options: any, page: number = 1, limit: number = 10): Promise<PaginationData> => {
+export const paginateResources = async (prisma: PrismaService, user: any, options: any, page: number = 1, limit: number = 10): Promise<PaginationData> => {
 	if (limit > 100) limit = 100;
 
 	const resourcesCount: number = await prisma.resource.count({ ...options });
@@ -40,6 +40,23 @@ export const paginateResources = async (prisma: PrismaService, options: any, pag
 			author: await computeUser(prisma, resource.author)
 		});
 	}));
+
+	if (user) {
+		await Promise.all(computedResources.map(async (resource) => {
+			const like = await prisma.resource.count({
+				where: {
+					id: resource.id,
+					favoriteUsers: {
+						some: {
+							id: user['sub']
+						}
+					}
+				}
+			});
+
+			resource.liked = like > 0;
+		}));
+	}
 
 	return {
 		data: computedResources,

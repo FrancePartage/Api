@@ -100,9 +100,10 @@ export class UsersService {
 		);
 	}
 
-	async findAllResources(userId: number, page: number, limit: number) {
+	async findAllResources(user: any, userId: number, page: number, limit: number) {
 		return await paginateResources(
 			this.prisma, 
+			user,
 			{
 				where: {
 					status: ResourceStatus.APPROVED,
@@ -216,9 +217,10 @@ export class UsersService {
 		);
 	}
 
-	async findAllFavorites(userId: number, page: number, limit: number) {
+	async findAllFavorites(user: any, userId: number, page: number, limit: number) {
 		return await paginateResources(
 			this.prisma,
+			user,
 			{
 				where: {
 					favoriteUsers: {
