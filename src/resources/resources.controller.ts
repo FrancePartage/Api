@@ -91,9 +91,9 @@ export class ResourcesController {
 	}
 
 	@Get('first/:id')
-	@Public()
-	async find(@Param() params: GetResourceDto) {
-		return await this.resourcesService.find(parseInt(params.id.toString()));
+	@MaybeAuthentificated()
+	async find(@GetCurrentUser() user, @Param() params: GetResourceDto) {
+		return await this.resourcesService.findMaybeAuthentificated(user, parseInt(params.id.toString()));
 	}
 
 	@Delete('first/:id')

@@ -13,6 +13,40 @@ export class ResourcesService {
 		private prisma: PrismaService
 	) {}
 
+	async findMaybeAuthentificated(user: any, id: number) {
+		const resource: any = await this.prisma.resource.findFirst({
+			where: {
+				id: id
+			},
+			include: {
+				author: true
+			}
+		});
+
+		if (resource) { 
+			resource.author = await computeUser(this.prisma, resource.author);
+
+			if (user) {
+				const like = await this.prisma.resource.count({
+					where: {
+						id: resource.id,
+						favoriteUsers: {
+							some: {
+								id: user['sub']
+							}
+						}
+					}
+				});
+
+				resource.liked = like > 0;
+			}
+		}
+
+		return {
+			data: resource
+		};
+	}
+
 	async find(id: number) {
 		const resource: any = await this.prisma.resource.findFirst({
 			where: {
