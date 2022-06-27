@@ -64,7 +64,7 @@ export class ResourcesService {
 		};
 	}
 
-	async searchAll(params: SearchResourceParamDto) {
+	async searchAll(user: any, params: SearchResourceParamDto) {
 		const resources = await this.prisma.resource.findMany({
 			where: {
 				OR: [
@@ -107,6 +107,23 @@ export class ResourcesService {
 				author: await computeUser(this.prisma, resource.author)
 			});
 		}));
+
+		if (user) {
+			await Promise.all(computedResources.map(async (resource) => {
+				const like = await this.prisma.resource.count({
+					where: {
+						id: resource.id,
+						favoriteUsers: {
+							some: {
+								id: user['sub']
+							}
+						}
+					}
+				});
+
+				resource.liked = like > 0;
+			}));
+		}
 
 		return {
 			data: computedResources

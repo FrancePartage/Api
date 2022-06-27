@@ -73,9 +73,9 @@ export class ResourcesController {
 	}
 
 	@Get('search/:query')
-	@Public()
-	async searchAll(@Param() params: SearchResourceParamDto) {
-		return this.resourcesService.searchAll(params);
+	@MaybeAuthentificated()
+	async searchAll(@GetCurrentUser() user, @Param() params: SearchResourceParamDto) {
+		return this.resourcesService.searchAll(user, params);
 	}
 
 	@Post('/')
