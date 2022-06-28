@@ -57,12 +57,12 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST}
 
         # Executed on EC2
-        export MIGRATE_DATABASE
-        sudo mkdir /var/www/api
         cd /var/www/api
         # aws ecr get-login-password --region eu-west-3 | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
         # sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
-        sudo docker compose -f docker-compose.prod.yml up -d
+        echo 'Pulling the repo...'
         sudo GIT_SSH_COMMAND='ssh -i /home/admin/.ssh/id_ed25519 -o IdentitiesOnly=yes' git pull
+        echo 'Building docker image...'
         sudo docker compose -f docker-compose.prod.yml build
+        echo 'Starting docker containers...'
         sudo docker compose -f docker-compose.prod.yml up -d
