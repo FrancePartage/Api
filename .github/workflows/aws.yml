@@ -8,6 +8,8 @@ on:
 env:
   AWS_REGION: eu-west-3                           # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: france-partage-api              # set this to your Amazon ECR repository name
+  ECR_REGISTRY_ALIAS: registry-alias
+  ECR_IMAGE_TAG: latest
 
 permissions:
   contents: read
@@ -32,20 +34,16 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
+      with:
+        registry-type: 'public'
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: latest
       run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-        docker tag $IMAGE_TAG public.ecr.aws/$ECR_REGISTRY/$ECR_REPOSITORY
-        docker build -t public.ecr.aws/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push public.ecr.aws/$ECR_REGISTRY/$ECR_REPOSITORY
-        echo "::set-output name=image::public.ecr.aws/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        docker build -t $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:$ECR_IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:$ECR_IMAGE_TAG
 
     - name: Deploy to EC2
       env:
@@ -61,6 +59,6 @@ jobs:
         # Executed on EC2
         sudo mkdir /var/www/api
         cd /var/www/api
-        sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        sudo docker pull public.ecr.aws/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:$ECR_IMAGE_TAG
 
         
