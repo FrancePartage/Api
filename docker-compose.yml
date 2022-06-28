@@ -34,27 +34,6 @@ services:
       MIGRATE_DATABASE: 1
     restart: unless-stopped
 
-  prod:
-    container_name: nestjs_api_prod
-    image: nestjs-api-prod:1.0.0
-    depends_on:
-      - db
-    build:
-      context: .
-      target: nestjs
-      dockerfile: ./Dockerfile
-    command: npm run start:prod
-    ports:
-      - 3333:3333
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    environment:
-      DATABASE_URL: "postgresql://postgres:postgres@db:5432/FrancePartage?schema=public"
-      NODE_ENV: production
-      MIGRATE_DATABASE: 1
-    restart: unless-stopped
-
   prisma-studio:
     <<: *dev
     container_name: prisma-studio

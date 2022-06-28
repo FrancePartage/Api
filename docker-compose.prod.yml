@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: database
+    image: postgres:12
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: FrancePartage
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+
+  prod:
+    container_name: nestjs_api_prod
+    image: nestjs-api-prod:1.0.0
+    depends_on:
+      - db
+    build:
+      context: .
+      target: nestjs
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3333:3333
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/FrancePartage?schema=public"
+      NODE_ENV: production
+      MIGRATE_DATABASE: 1
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`api-francepartage.zapto.org`)"
+      - "traefik.http.routers.whoami.entrypoints=api"
+
+  traefik:
+    image: "traefik:v2.6"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.api.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
