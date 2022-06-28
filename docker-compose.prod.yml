@@ -36,7 +36,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`api-francepartage.zapto.org`)"
-      - "traefik.http.routers.whoami.entrypoints=api"
+      - "traefik.http.routers.whoami.entrypoints=apisecure"
+      - "traefik.http.routers.whoami.tls.certresolver=apiresolver"
 
   traefik:
     image: "traefik:v2.6"
@@ -47,8 +48,16 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.api.address=:80"
+      - "--entrypoints.apisecure.address=:443"
+      - "--certificatesresolvers.apiresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.apiresolver.acme.httpchallenge.entrypoint=api"
+      - "--certificatesresolvers.apiresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.apiresolver.acme.email=tom.brulin@viacesi.fr"
+      - "--certificatesresolvers.apiresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"
+      - "443:443"
       - "8080:8080"
     volumes:
+      - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
