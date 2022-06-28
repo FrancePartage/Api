@@ -46,10 +46,10 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG"
-    - name: Add SSH key to ssh-agent
+    - name: Add SSH key to the agent
       uses: webfactory/ssh-agent@v0.5.4
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
     - name: Deploy to EC2
       env:
         REMOTE_HOST: ${{ secrets.EC2_HOST_DNS }}
