@@ -53,16 +53,22 @@ jobs:
         REMOTE_USER: ${{ secrets.EC2_USERNAME }}
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
-        echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
-        ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST}
+        # echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
+        # ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST}
+        'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+        eval $(ssh-agent -s)
+        echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
 
         # Executed on EC2
-        cd /var/www/api
+        ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "cd /var/www/api; sudo docker compose -f docker-compose.prod.yml down; sudo GIT_SSH_COMMAND='ssh -i /home/admin/.ssh/id_ed25519 -o IdentitiesOnly=yes' git pull; sudo docker compose -f docker-compose.prod.yml build; sudo docker compose -f docker-compose.prod.yml up -d"
         # aws ecr get-login-password --region eu-west-3 | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
         # sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
-        echo 'Pulling the repo...'
-        sudo GIT_SSH_COMMAND='ssh -i /home/admin/.ssh/id_ed25519 -o IdentitiesOnly=yes' git pull
-        echo 'Building docker image...'
-        sudo docker compose -f docker-compose.prod.yml build
-        echo 'Starting docker containers...'
-        sudo docker compose -f docker-compose.prod.yml up -d
+        # sudo docker compose -f docker-compose.prod.yml down
+        # echo 'Pulling the repo...'
+        # sudo GIT_SSH_COMMAND='ssh -i /home/admin/.ssh/id_ed25519 -o IdentitiesOnly=yes' git pull
+        # echo 'Building docker image...'
+        # sudo docker compose -f docker-compose.prod.yml build
+        # echo 'Starting docker containers...'
+        # sudo docker compose -f docker-compose.prod.yml up -d
