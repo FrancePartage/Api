@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: eu-west-3                           # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: france-partage-api               # set this to your Amazon ECR repository name
+  ECR_REPOSITORY: france-partage-api              # set this to your Amazon ECR repository name
 
 permissions:
   contents: read
@@ -42,9 +42,10 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        docker tag $IMAGE_TAG public.ecr.aws/$ECR_REGISTRY/$ECR_REPOSITORY
+        docker build -t public.ecr.aws/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push public.ecr.aws/$ECR_REGISTRY/$ECR_REPOSITORY
+        echo "::set-output name=image::public.ecr.aws/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
     - name: Deploy to EC2
       env:
