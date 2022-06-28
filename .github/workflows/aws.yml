@@ -6,10 +6,10 @@ on:
       - "master"
 
 env:
-  AWS_REGION: eu-west-3                           # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: france-partage-api              # set this to your Amazon ECR repository name
-  ECR_REGISTRY_ALIAS: registry-alias
-  ECR_IMAGE_TAG: latest
+  AWS_REGION: eu-west-3       
+
+  ECR_REPOSITORY: france-partage-api             
+  ECR_IMAGE_TAG: latest 
 
 permissions:
   contents: read
@@ -31,34 +31,31 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login to Amazon ECR Public
-      id: login-ecr-public
+    - name: Login to Amazon ECR
+      id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
-      with:
-        registry-type: 'public'
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:$ECR_IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:$ECR_IMAGE_TAG
-
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG"
     - name: Deploy to EC2
       env:
         SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
         REMOTE_HOST: ${{ secrets.EC2_HOST_DNS }}
         REMOTE_USER: ${{ secrets.EC2_USERNAME }}
-        ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-        IMAGE_TAG: latest
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
         echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST}
-
         # Executed on EC2
         sudo mkdir /var/www/api
         cd /var/www/api
-        sudo docker pull public.ecr.aws/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:$ECR_IMAGE_TAG
-
-        
+        sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
