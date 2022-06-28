@@ -58,8 +58,8 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST}
 
         # Executed on EC2
-        mkdir /var/www/api
-        cd /var/www/api
-        docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        sudo mkdir /var/www/api
+        sudo cd /var/www/api
+        sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
         
