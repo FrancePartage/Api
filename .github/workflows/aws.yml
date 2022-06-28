@@ -46,21 +46,16 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG"
+    - name: Add SSH key to ssh-agent
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - name: Deploy to EC2
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
         REMOTE_HOST: ${{ secrets.EC2_HOST_DNS }}
         REMOTE_USER: ${{ secrets.EC2_USERNAME }}
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
-        # echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
-        # ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST}
-        'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-        eval $(ssh-agent -s)
-        echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-        mkdir -p ~/.ssh
-        chmod 700 ~/.ssh
-
         # Executed on EC2
         ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "cd /var/www/api; sudo docker compose -f docker-compose.prod.yml down; sudo GIT_SSH_COMMAND='ssh -i /home/admin/.ssh/id_ed25519 -o IdentitiesOnly=yes' git pull; sudo docker compose -f docker-compose.prod.yml build; sudo docker compose -f docker-compose.prod.yml up -d"
         # aws ecr get-login-password --region eu-west-3 | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
