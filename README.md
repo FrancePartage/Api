@@ -60,6 +60,7 @@ API pour la plateforme FrancePartage utilisant le framework NestJS
 - [x] Récuperation des ressources par tag
 - [x] Récuperer la couverture d'une ressource
 - [x] Récuperer les ressources d'un utilisateur
+- [ ] Ajout d'une localisation à une resource (optionnel)
 
 ### Relations
 
