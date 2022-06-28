@@ -51,7 +51,7 @@ services:
       - "--entrypoints.apisecure.address=:443"
       - "--certificatesresolvers.apiresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.apiresolver.acme.httpchallenge.entrypoint=api"
-      - "--certificatesresolvers.apiresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      #- "--certificatesresolvers.apiresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.apiresolver.acme.email=tom.brulin@viacesi.fr"
       - "--certificatesresolvers.apiresolver.acme.storage=/letsencrypt/acme.json"
     ports:
