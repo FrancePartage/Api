@@ -57,13 +57,11 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
         # Executed on EC2
-        ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "cd /var/www/api; sudo docker compose -f docker-compose.prod.yml down; sudo GIT_SSH_COMMAND='ssh -i /home/admin/.ssh/id_ed25519 -o IdentitiesOnly=yes' git pull; sudo docker compose -f docker-compose.prod.yml build; sudo docker compose -f docker-compose.prod.yml up -d"
+        ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "cd /var/www/api; sudo docker compose -f docker-compose.prod.yml down; sudo GIT_SSH_COMMAND='ssh -i /home/admin/.ssh/id_ed25519 -o IdentitiesOnly=yes' git pull; sudo docker compose -f docker-compose.prod.yml up -d"
         # aws ecr get-login-password --region eu-west-3 | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
         # sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
         # sudo docker compose -f docker-compose.prod.yml down
         # echo 'Pulling the repo...'
         # sudo GIT_SSH_COMMAND='ssh -i /home/admin/.ssh/id_ed25519 -o IdentitiesOnly=yes' git pull
-        # echo 'Building docker image...'
-        # sudo docker compose -f docker-compose.prod.yml build
         # echo 'Starting docker containers...'
         # sudo docker compose -f docker-compose.prod.yml up -d
