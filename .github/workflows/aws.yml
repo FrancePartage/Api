@@ -57,7 +57,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST}
 
         # Executed on EC2
-        echo $ECR_REGISTRY
         sudo mkdir /var/www/api
         cd /var/www/api
+        aws ecr get-login-password --region eu-west-3 | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
         sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
