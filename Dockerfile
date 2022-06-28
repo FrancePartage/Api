@@ -22,4 +22,4 @@ RUN chmod +x /usr/local/bin/docker-entrypoint
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 
-CMD npm run start:prod
+CMD ["npm", "run", "start:prod"]
