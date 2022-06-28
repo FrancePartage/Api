@@ -47,8 +47,6 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--providers.file=true"
-      - "--providers.file.filename=/etc/traefik/rules.toml"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.apiresolver.acme.httpchallenge=true"
@@ -56,24 +54,10 @@ services:
       #- "--certificatesresolvers.apiresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.apiresolver.acme.email=tom.brulin@viacesi.fr"
       - "--certificatesresolvers.apiresolver.acme.storage=/letsencrypt/acme.json"
-
-      - "--certificatesresolvers.nextresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.nextresolver.acme.httpchallenge.entrypoint=web"
-      #- "--certificatesresolvers.nextresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.nextresolver.acme.email=tom.brulin@viacesi.fr"
-      - "--certificatesresolvers.nextresolver.acme.storage=/letsencrypt/acme.json"
-
-      - "traefik.http.routers.next.entrypoints=websecure"
-      - "traefik.http.routers.next.rule=Host(`francepartage.zapto.org`)"
-      - "traefik.http.routers.next.service=next@file"
-      - "traefik.http.routers.next.tls=true"
-      - "traefik.http.routers.next.tls.certresolver=nextresolver"
     ports:
       - "80:80"
       - "443:443"
       - "8080:8080"
     volumes:
       - "./letsencrypt:/letsencrypt"
-      - "./traefik/rules.toml:/etc/traefik/rules.toml"
-      - "./traefik/services.toml:/etc/traefik/services.toml"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"

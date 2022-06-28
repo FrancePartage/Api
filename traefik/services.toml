@@ -1,6 +1,0 @@
-[http]
-  [http.services]
-    [http.services.next]
-      [http.services.next.loadBalancer]
-        [[http.services.next.loadBalancer.servers]]
-          url = "http://localhost:3000/"
