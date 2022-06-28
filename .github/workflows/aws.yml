@@ -59,7 +59,7 @@ jobs:
 
         # Executed on EC2
         sudo mkdir /var/www/api
-        sudo cd /var/www/api
+        cd /var/www/api
         sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
         
