@@ -1,0 +1,4 @@
+[api]
+
+[providers.file]
+  filename = "/etc/traefik/services.toml"
