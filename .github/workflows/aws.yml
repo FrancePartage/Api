@@ -35,8 +35,8 @@ jobs:
 
       - name: Install Jest
         run: |
-          npm install -g jest
-          npm install ts-jest
+          sudo npm install -g jest
+          sudo npm install ts-jest
 
       - name: Test
         run: |
