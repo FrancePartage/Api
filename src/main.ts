@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
 	const corsOptions ={
-			origin:'http://francepartage.zapto.org', 
+			origin:'*', 
 			credentials:true,            //access-control-allow-credentials:true
 			optionSuccessStatus:200
 	}
