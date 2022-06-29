@@ -29,7 +29,12 @@ export const paginateResources = async (prisma: PrismaService, user: any, option
 			createdAt: true,
 			updatedAt: true,
 			author: true
-		}
+		},
+		orderBy: [
+			{
+				createdAt: 'desc'
+			}
+		]
 	});
 
 	const computedResources = [];
@@ -133,7 +138,12 @@ export const paginateComments = async (prisma: PrismaService, options: any, page
 		...options,
 		include: {
 			author: true
-		}
+		},
+		orderBy: [
+			{
+				createdAt: 'desc'
+			}
+		]
 	});
 
 	const computedComments = [];
