@@ -29,10 +29,17 @@ jobs:
           docker compose up dev -d
         
       - name: Test
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
         run: |
+          npm install -g jest
           npm run test
         
       - name: Test E2E
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
         run: |
           npm run test:e2e
 
