@@ -40,11 +40,11 @@ jobs:
 
       - name: Test
         run: |
-          npm run test
+          sudo npm run test
         
       - name: Test E2E
         run: |
-          npm run test:e2e
+          sudo npm run test:e2e
 
 
   deploy:
