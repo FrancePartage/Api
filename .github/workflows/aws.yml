@@ -20,21 +20,21 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
 
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Start API
-      run: |
-        docker compose up dev -d
-      
-    - name: Test
-      run: |
-        npm run test
-      
-    - name: Test E2E
-      run: |
-        npm run test:e2e
+      - name: Start API
+        run: |
+          docker compose up dev -d
+        
+      - name: Test
+        run: |
+          npm run test
+        
+      - name: Test E2E
+        run: |
+          npm run test:e2e
 
 
   deploy:
