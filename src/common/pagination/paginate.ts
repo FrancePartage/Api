@@ -137,7 +137,8 @@ export const paginateComments = async (prisma: PrismaService, options: any, page
 		...paginationOptions,
 		...options,
 		include: {
-			author: true
+			author: true,
+			childrens: true
 		},
 		orderBy: [
 			{
