@@ -46,7 +46,7 @@ export class UsersController {
 	@Get('')
 	@Roles(UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN)
 	findAll(@Query() queryParams: GetUsersQuery) {
-		return this.usersService.findAll(queryParams.page, queryParams.limit, queryParams.search);
+		return this.usersService.findAll(parseInt(queryParams.page.toString()), parseInt(queryParams.limit.toString()), queryParams.search);
 	}
 
 	@Get('search/:query')

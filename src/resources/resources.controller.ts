@@ -69,7 +69,7 @@ export class ResourcesController {
 	@Get('/')
 	@MaybeAuthentificated()
 	async findAll(@GetCurrentUser() user, @Query() queryParams: GetResourcesQuery) {
-		return this.resourcesService.findAll(user, queryParams.page, queryParams.limit);
+		return this.resourcesService.findAll(user, parseInt(queryParams.page.toString()), parseInt(queryParams.limit.toString()));
 	}
 
 	@Get('search/:query')
@@ -115,7 +115,7 @@ export class ResourcesController {
 	@Get('pendings')
 	@Roles(UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN)
 	async findAllPendings(@Query() queryParams: GetResourcesQuery) {
-		return this.resourcesService.findAll(-1, queryParams.page, queryParams.limit, ResourceStatus.PENDING);
+		return this.resourcesService.findAll(-1, parseInt(queryParams.page.toString()), parseInt(queryParams.limit.toString()), ResourceStatus.PENDING);
 	}
 
 	@Get('tags')
