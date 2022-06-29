@@ -14,13 +14,8 @@ describe('UsersController', () => {
     })
     .useMocker((token) => {
       if (token === AuthService) {
-        const signinLocalResult = {
-          accessToken: '01cf24d6a8422e8ee7ff61015fc265a2f4d2af11098a0af71882586a835b70ed',
-          refreshToken: '39289fc29a276689985405f95b5cb641a6e27dd5db2d450cc6ac213429d0f063'
-        }
-
         return { 
-          signinLocal: signinLocalResult
+          
         };
       }
       if (typeof token === 'function') {

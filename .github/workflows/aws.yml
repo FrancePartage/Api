@@ -15,10 +15,33 @@ permissions:
   contents: read
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    environment: production
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Start API
+      run: |
+        docker compose up dev -d
+      
+    - name: Test
+      run: |
+        npm run test
+      
+    - name: Test E2E
+      run: |
+        npm run test:e2e
+
+
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
+    needs: test
 
     steps:
     - name: Checkout
@@ -46,10 +69,12 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG"
+
     - name: Add SSH key to the agent
       uses: webfactory/ssh-agent@v0.5.4
       with:
         ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
     - name: Deploy to EC2
       env:
         REMOTE_HOST: ${{ secrets.EC2_HOST_DNS }}
