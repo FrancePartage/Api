@@ -76,7 +76,7 @@ export class ResourcesService {
 					},
 					{
 						tags: {
-							has: params.query
+							has: params.query.toLocaleLowerCase()
 						}
 					}
 				],
@@ -152,13 +152,19 @@ export class ResourcesService {
 	async create(userId: number, coverFile: any, dto: CreateResourceDto) {
 		if (!coverFile) throw new ForbiddenException("Couverture non trouvée");
 
+		const tags = [];
+
+		dto.tags.map((tag) => {
+			tags.push(tag.toLocaleLowerCase());
+		});
+
 		return await this.prisma.resource.create({
 			data: {
 				authorId: userId,
 				title: dto.title,
 				cover: coverFile.filename,
 				content: dto.content,
-				tags: dto.tags
+				tags: tags
 			}
 		});
 	}
