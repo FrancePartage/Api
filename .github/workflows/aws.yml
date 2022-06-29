@@ -36,7 +36,7 @@ jobs:
       - name: Install Jest
         run: |
           npm install -g jest
-          npm install -g ts-jest
+          npm install ts-jest
 
       - name: Test
         run: |
