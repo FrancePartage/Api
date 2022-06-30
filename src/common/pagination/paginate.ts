@@ -138,7 +138,11 @@ export const paginateComments = async (prisma: PrismaService, options: any, page
 		...options,
 		include: {
 			author: true,
-			childrens: true
+			childrens: {
+				include: {
+					author: true
+				}
+			}
 		},
 		orderBy: [
 			{
@@ -152,7 +156,13 @@ export const paginateComments = async (prisma: PrismaService, options: any, page
 	await Promise.all(comments.map(async (comment: any) => {
 		computedComments.push({
 			...comment,
-			author: await computeUser(prisma, comment.author)
+			author: await computeUser(prisma, comment.author),
+			childrens: await Promise.all(comment.childrens.map(async (children: any) => {
+				return {
+					...children,
+					author: await computeUser(prisma, children.author)
+				}
+			}))
 		});
 	}));
 

@@ -291,7 +291,8 @@ export class ResourcesService {
 			data: {
 				authorId: userId,
 				resourceId: resourceId,
-				content: dto.content
+				content: dto.content,
+				parent_id: dto.parentId ? dto.parentId : null
 			},
 			include: {
 				author: true
