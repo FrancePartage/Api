@@ -15,9 +15,16 @@ async function bootstrap() {
 	app.use(cors(corsOptions));
 	*/
 
-	app.enableCors({
-		origin: true
-	});
+  const options = {
+    "origin":true,  // attempted "origin":["http://localhost"]
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 200,
+    "credentials":true,
+    "allowedHeaders": "Content-Type, Accept,Authorization",
+
+  }
+ app.use(cors(options));
 
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3333);
