@@ -15,6 +15,16 @@ async function bootstrap() {
 	app.use(cors(corsOptions));
 	*/
 
+	const options = {
+		origin: "*",
+		methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+		preflightContinue: false,
+		optionsSuccessStatus: 204,
+		credentials: true
+	};
+
+	app.enableCors(options);
+
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3333);
 }
