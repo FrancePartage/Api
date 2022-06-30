@@ -77,6 +77,10 @@ model Comment {
 	resource						Resource				@relation(name: "r_comments", fields: [resourceId], references: [id])
 	content							String
 
+  childrens  					Comment[] @relation("Comment_Children")
+  parent     					Comment?  @relation("Comment_Children", fields: [parent_id], references: [id])
+  parent_id 					Int?
+
 	createdAt 					DateTime 				@default(now())
 
 	@@map("comments")

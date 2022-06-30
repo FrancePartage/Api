@@ -339,7 +339,8 @@ export class ResourcesService {
 			this.prisma, 
 			{
 				where: {
-					resourceId: parseInt(params.id.toString())
+					resourceId: parseInt(params.id.toString()),
+					parent_id: null
 				},
 				orderBy: {
 					createdAt: 'desc'
